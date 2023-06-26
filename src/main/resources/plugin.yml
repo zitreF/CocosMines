@@ -1,0 +1,6 @@
+name: CocosMines
+version: '${version}'
+main: me.cocos.cocosmines.CocosMines
+api-version: 1.17
+commands:
+  cocosmine:
