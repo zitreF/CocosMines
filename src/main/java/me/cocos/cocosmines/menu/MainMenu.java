@@ -6,9 +6,11 @@ import me.cocos.cocosmines.helper.TimeHelper;
 import me.cocos.cocosmines.menu.impl.MineEditMenu;
 import me.cocos.cocosmines.service.MineService;
 import me.cocos.menu.Menu;
+import me.cocos.menu.animation.Animation;
 import me.cocos.menu.builder.impl.ItemBuilder;
 import me.cocos.menu.helper.GuiHelper;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 public final class MainMenu extends Menu {
@@ -35,7 +37,7 @@ public final class MainMenu extends Menu {
                 // create new page :)
                 return;
             }
-            ItemBuilder item = ItemBuilder.from(mine.getSpawningBlocks().get(0))
+            ItemBuilder item = ItemBuilder.from(mine.getLogo())
                     .withItemName("&a&l" + mine.getName())
                     .withLore(
                             "",

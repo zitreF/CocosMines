@@ -28,7 +28,7 @@ repositories {
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT"
-    implementation 'com.github.zitreF:CocosMenu:2.5'
+    implementation 'com.github.zitreF:CocosMenu:2.5.2'
 }
 
 def targetJavaVersion = 16

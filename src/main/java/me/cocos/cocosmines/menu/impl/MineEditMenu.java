@@ -5,9 +5,15 @@ import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.service.ModificationService;
 import me.cocos.menu.Menu;
 import me.cocos.menu.builder.impl.ItemBuilder;
+import me.cocos.menu.builder.impl.MenuBuilder;
 import me.cocos.menu.helper.GuiHelper;
+import me.cocos.menu.type.MenuType;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Arrays;
 
 public final class MineEditMenu extends Menu {
 
@@ -18,6 +24,7 @@ public final class MineEditMenu extends Menu {
         this.mine = mine;
         ModificationService modificationService = CocosMines.getInstance().getModificationService();
         this.setOnInventoryClick(((event, player) -> event.setCancelled(true)));
+        this.setOnInventoryClose((event, player) -> this.dispose());
         GuiHelper.border(this.getInventory(), new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
         ItemStack name = ItemBuilder.from(Material.NAME_TAG).withItemName("&8● &7Zmien nazwe").build();
         ItemStack icon = ItemBuilder.from(Material.EMERALD_ORE).withItemName("&8● &7Ustaw ikone").build();
@@ -35,22 +42,47 @@ public final class MineEditMenu extends Menu {
             });
         });
         this.setItem(icon, 11).onInventoryClick((event, player) -> {
-
+            player.closeInventory();
+            Menu menu = MenuBuilder.from(MenuType.SIMPLE, "&8>> &7Zmien ikone", 1)
+                    .blockPlayerInventory(false)
+                    .build();
+            menu.setOnInventoryClose((event2, player2) -> {
+                mine.setLogo(menu.getInventory().getItem(0).getType());
+                menu.dispose();
+            });
+            player.openInventory(menu.getInventory());
         });
         this.setItem(items, 12).onInventoryClick((event, player) -> {
-
+            player.closeInventory();
+            Menu menu = MenuBuilder.from(MenuType.SIMPLE, "&8>> &7Zmien bloki", 1)
+                    .blockPlayerInventory(false)
+                    .addItems(mine.getSpawningBlocks().stream().map(ItemStack::new).toArray(ItemStack[]::new))
+                    .build();
+            menu.setOnInventoryClose((event2, player2) -> {
+                mine.getSpawningBlocks().clear();
+                for (ItemStack item : menu.getInventory().getContents()) {
+                    if (item == null) continue;
+                    mine.getSpawningBlocks().add(item.getType());
+                }
+                menu.dispose();
+            });
+            player.openInventory(menu.getInventory());
         });
         this.setItem(coords, 13).onInventoryClick((event, player) -> {
 
         });
         this.setItem(reset, 14).onInventoryClick((event, player) -> {
-
+            mine.regenerate();
+            // restart timer
         });
         this.setItem(turnoff, 15).onInventoryClick((event, player) -> {
 
         });
         this.setItem(teleport, 15).onInventoryClick((event, player) -> {
-
+            Location first = mine.getFirstLocation().clone();
+            Location second = mine.getSecondLocation().clone();
+            int bonusY = second.getBlockY()-first.getBlockY();
+            player.teleport(first.add(second).multiply(1/2d).add(0, bonusY/2d, 0));
         });
 
     }

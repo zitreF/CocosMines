@@ -4,6 +4,7 @@ import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.argument.Argument;
 import me.cocos.cocosmines.argument.impl.CreateArgument;
 import me.cocos.cocosmines.argument.impl.PanelArgument;
+import me.cocos.cocosmines.argument.impl.RemoveArgument;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -19,7 +20,8 @@ public final class ArgumentService {
         this.arguments = new HashMap<>();
         Stream.of(
                 new CreateArgument(plugin.getMineService()),
-                new PanelArgument(plugin.getMainMenu())
+                new PanelArgument(plugin.getMainMenu()),
+                new RemoveArgument(plugin.getMineService())
         ).forEach(command -> arguments.put(command.getName(), command));
     }
     public Argument getArgumentByName(String name) {
