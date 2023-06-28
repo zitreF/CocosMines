@@ -29,9 +29,10 @@ repositories {
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.17.1-R0.1-SNAPSHOT"
     implementation 'com.github.zitreF:CocosMenu:2.5.2'
+    compileOnly 'com.github.decentsoftware-eu:decentholograms:2.8.3'
 }
 
-def targetJavaVersion = 16
+def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
@@ -58,6 +59,6 @@ processResources {
 
 tasks {
     runServer {
-        minecraftVersion("1.17.1")
+        minecraftVersion("1.18.2")
     }
 }

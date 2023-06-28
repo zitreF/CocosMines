@@ -4,6 +4,7 @@ import me.cocos.cocosmines.command.MineCommand;
 import me.cocos.cocosmines.configuration.MineConfiguration;
 import me.cocos.cocosmines.listener.PlayerChatListener;
 import me.cocos.cocosmines.menu.MainMenu;
+import me.cocos.cocosmines.runnable.MineHologramUpdateRunnable;
 import me.cocos.cocosmines.service.ArgumentService;
 import me.cocos.cocosmines.service.MineService;
 import me.cocos.cocosmines.service.ModificationService;
@@ -33,6 +34,8 @@ public final class CocosMines extends JavaPlugin {
         ArgumentService argumentService = new ArgumentService(this);
         this.getServer().getPluginManager().registerEvents(new PlayerChatListener(modificationService), this);
         this.getCommand("cocosmine").setExecutor(new MineCommand(argumentService));
+        MineHologramUpdateRunnable mineHologramUpdateRunnable = new MineHologramUpdateRunnable(mineService);
+        this.getServer().getScheduler().runTaskTimerAsynchronously(this, mineHologramUpdateRunnable, 20, 20);
     }
 
     @Override

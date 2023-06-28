@@ -20,6 +20,10 @@ public final class MineCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player player = (Player) sender;
+        if (!player.hasPermission("cocosmines.admin")) {
+            player.sendMessage(ChatHelper.coloredText("&8>> &cNie posiadasz uprawnien (cocosmines.admin)"));
+            return false;
+        }
         if (args.length == 0) {
             this.sendCorrectUsageMessage(player);
             return false;

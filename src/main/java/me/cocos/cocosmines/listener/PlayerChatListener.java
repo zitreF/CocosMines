@@ -1,12 +1,11 @@
 package me.cocos.cocosmines.listener;
 
+import me.cocos.cocosmines.data.Notification;
 import me.cocos.cocosmines.service.ModificationService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
-import java.util.function.Consumer;
 
 public final class PlayerChatListener implements Listener {
 
@@ -19,11 +18,11 @@ public final class PlayerChatListener implements Listener {
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
-        Consumer<AsyncPlayerChatEvent> callback = modificationService.findAction(player.getUniqueId());
-        if (callback == null) {
+        Notification notification = modificationService.findAction(player.getUniqueId());
+        if (notification == null) {
             return;
         }
         event.setCancelled(true);
-        callback.accept(event);
+        notification.getConsumer().accept(event);
     }
 }

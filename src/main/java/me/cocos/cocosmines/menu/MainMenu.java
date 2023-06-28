@@ -25,8 +25,6 @@ public final class MainMenu extends Menu {
         });
     }
 
-    // 5 minut
-//    @Scheduled(delay = 6000L, repeat = 6000L, async = true)
     @Override
     public void update() {
         this.getInventory().clear();
@@ -34,7 +32,6 @@ public final class MainMenu extends Menu {
         for (Mine mine : mineService.getMines()) {
             int empty = this.getInventory().firstEmpty();
             if (empty == -1) {
-                // create new page :)
                 return;
             }
             ItemBuilder item = ItemBuilder.from(mine.getLogo())

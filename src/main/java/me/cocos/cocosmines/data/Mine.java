@@ -1,6 +1,9 @@
 package me.cocos.cocosmines.data;
 
+import eu.decentsoftware.holograms.api.DHAPI;
+import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.cocos.cocosmines.CocosMines;
+import me.cocos.cocosmines.helper.ChanceHelper;
 import me.cocos.cocosmines.runnable.MineRegenerationRunnable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 public final class Mine {
 
@@ -21,12 +25,14 @@ public final class Mine {
     private final String owner;
     private final long creationTime;
     private long regenTime;
+    private long lastRegenerationTime;
     private final World world;
     private Material logo;
-    private final List<Material> spawningBlocks;
+    private final List<MineBlock> spawningBlocks;
     private final Location firstLocation;
     private final Location secondLocation;
 
+    private final Hologram hologram;
     private final BukkitTask task;
 
     public Mine(String name, String owner, long creationTime, long regenTime, Material logo, Location firstLocation, Location secondLocation) {
@@ -37,7 +43,7 @@ public final class Mine {
         this.regenTime = regenTime;
         this.logo = logo;
         this.spawningBlocks = new ArrayList<>();
-        spawningBlocks.add(Material.DIRT);
+        spawningBlocks.add(new MineBlock(50, Material.STONE));
         int startX = Math.min(firstLocation.getBlockX(), secondLocation.getBlockX());
         int startY = Math.min(firstLocation.getBlockY(), secondLocation.getBlockY());
         int startZ = Math.min(firstLocation.getBlockZ(), secondLocation.getBlockZ());
@@ -48,6 +54,8 @@ public final class Mine {
         this.secondLocation = new Location(world, endX, endY, endZ);
         MineRegenerationRunnable mineRegenerationRunnable = new MineRegenerationRunnable(this);
         this.task = Bukkit.getScheduler().runTaskTimer(CocosMines.getInstance(), mineRegenerationRunnable, 20L, regenTime*20L);
+        Location firstClone = firstLocation.clone();
+        this.hologram = DHAPI.createHologram(this.name, firstClone.add(secondLocation).multiply(1/2d), false, List.of("Tworze hologram..."));
     }
 
     public void regenerate() {
@@ -55,10 +63,37 @@ public final class Mine {
             for (int x = firstLocation.getBlockX(); x <= secondLocation.getBlockX(); x++) {
                 for (int z = firstLocation.getBlockZ(); z <= secondLocation.getBlockZ(); z++) {
                     Block block = world.getBlockAt(x, y, z);
-                    block.setType(spawningBlocks.get(ThreadLocalRandom.current().nextInt(spawningBlocks.size())));
+                    Material material = ChanceHelper.getRandomMaterial(this.spawningBlocks);
+                    block.setType(material);
                 }
             }
         }
+    }
+
+    public long getLastRegenerationTime() {
+        return lastRegenerationTime;
+    }
+
+    public void setLastRegenerationTime(long time) {
+        this.lastRegenerationTime = time;
+    }
+
+    public void updateLocation(Location first, Location second) {
+        this.firstLocation.setX(Math.min(first.getBlockX(), second.getBlockX()));
+        this.firstLocation.setY(Math.min(first.getBlockY(), second.getBlockY()));
+        this.firstLocation.setZ(Math.min(first.getBlockZ(), second.getBlockZ()));
+        this.secondLocation.setX(Math.max(first.getBlockX(), second.getBlockX()));
+        this.secondLocation.setY(Math.max(first.getBlockY(), second.getBlockY()));
+        this.secondLocation.setZ(Math.max(first.getBlockZ(), second.getBlockZ()));
+        this.hologram.setLocation(firstLocation.clone().add(secondLocation).multiply(1/2d));
+    }
+
+    public void updateHologram(List<String> lines) {
+        DHAPI.setHologramLines(hologram, lines);
+    }
+
+    public Hologram getHologram() {
+        return hologram;
     }
 
     public String getName() {
@@ -97,7 +132,7 @@ public final class Mine {
         this.logo = logo;
     }
 
-    public List<Material> getSpawningBlocks() {
+    public List<MineBlock> getSpawningBlocks() {
         return spawningBlocks;
     }
 

@@ -19,7 +19,7 @@ public final class ArgumentService {
     public ArgumentService(CocosMines plugin) {
         this.arguments = new HashMap<>();
         Stream.of(
-                new CreateArgument(plugin.getMineService()),
+                new CreateArgument(plugin.getMineService(), plugin.getModificationService()),
                 new PanelArgument(plugin.getMainMenu()),
                 new RemoveArgument(plugin.getMineService())
         ).forEach(command -> arguments.put(command.getName(), command));
