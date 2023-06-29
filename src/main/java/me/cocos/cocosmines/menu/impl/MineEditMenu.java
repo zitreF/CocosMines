@@ -108,7 +108,12 @@ public final class MineEditMenu extends Menu {
                     player.sendMessage(ChatHelper.coloredText("&cMusisz wpisac liczbe!"));
                     return;
                 }
-                mine.setRegenTime(Long.parseLong(chatEvent.getMessage()));
+                long regenTime = Long.parseLong(chatEvent.getMessage());
+                if (regenTime < 1) {
+                    player.sendMessage(ChatHelper.coloredText("&8>> &7Czas regeneracji nie moze byc mniejszy niz 1!"));
+                    return;
+                }
+                mine.setRegenTime(regenTime);
             }));
 
         });

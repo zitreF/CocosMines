@@ -45,6 +45,7 @@ public final class BlockChangeMenu extends Menu {
             MineBlock mineBlock = new MineBlock(50, clickedBlock.getType());
             mine.getSpawningBlocks().add(mineBlock);
             int firstEmpty = this.getInventory().firstEmpty();
+            if (firstEmpty == -1) return;
             ItemBuilder builder = ItemBuilder.from(mineBlock.getMaterial())
                     .withLore(
                             "",
@@ -89,6 +90,7 @@ public final class BlockChangeMenu extends Menu {
         this.clearInventory();
         for (MineBlock mineBlock : mine.getSpawningBlocks()) {
             int firstEmpty = this.getInventory().firstEmpty();
+            if (firstEmpty == -1) return;
             ItemBuilder builder = ItemBuilder.from(mineBlock.getMaterial())
                     .withLore(
                             "",

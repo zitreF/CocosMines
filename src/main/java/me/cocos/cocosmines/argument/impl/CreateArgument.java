@@ -14,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 public final class CreateArgument implements Argument {
@@ -37,6 +38,10 @@ public final class CreateArgument implements Argument {
             return;
         }
         long regenTime = Long.parseLong(args[2]);
+        if (regenTime < 1) {
+            player.sendMessage(ChatHelper.coloredText("&8>> &7Czas regeneracji nie moze byc mniejszy niz 1!"));
+            return;
+        }
         modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz &a\"potwierdz\" &7aby potwierdzic pierwsza lokalizacje", chatEvent -> {
             if (chatEvent.getMessage().equalsIgnoreCase("anuluj")) {
                 modificationService.removeAction(player.getUniqueId());
@@ -51,7 +56,7 @@ public final class CreateArgument implements Argument {
                 }
                 if (!chatEvent2.getMessage().equalsIgnoreCase("potwierdz")) return;
                 Location secondBlock = chatEvent.getPlayer().getTargetBlock(Set.of(Material.AIR), 5).getLocation();
-                Mine mine = new Mine(args[1], player.getName(), System.currentTimeMillis(), regenTime, Material.BEDROCK, firstBlock, secondBlock);
+                Mine mine = new Mine(args[1], player.getName(), System.currentTimeMillis(), regenTime, Material.BEDROCK, new ArrayList<>(), firstBlock, secondBlock);
                 Bukkit.getScheduler().runTask(CocosMines.getInstance(), mine::regenerate);
                 mineService.createMine(mine);
                 mineService.addMine(mine);

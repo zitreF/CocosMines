@@ -2,6 +2,7 @@ package me.cocos.cocosmines.service;
 
 import me.cocos.cocosmines.configuration.MineConfiguration;
 import me.cocos.cocosmines.data.Mine;
+import me.cocos.cocosmines.data.MineBlock;
 import me.cocos.cocosmines.helper.LocationHelper;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,9 +36,14 @@ public final class MineService {
         long creationTime = section.getLong("creationTime");
         long regenTime = section.getLong("regenTime");
         Material logo = Material.valueOf(section.getString("logo"));
+        List<MineBlock> mineBlocks = Arrays.stream(section.getString("blocks").split(":")).map(string -> {
+            String[] split = string.split("=");
+            return new MineBlock(Double.parseDouble(split[0]), Material.valueOf(split[1]));
+        }).toList();
+
         Location firstLocation = LocationHelper.locationFromString(section.getString("firstLocation"));
         Location secondLocation = LocationHelper.locationFromString(section.getString("secondLocation"));
-        return new Mine(section.getName(), owner, creationTime, regenTime, logo, firstLocation, secondLocation);
+        return new Mine(section.getName(), owner, creationTime, regenTime, logo, mineBlocks, firstLocation, secondLocation);
     }
 
     public void saveMines() {
@@ -48,6 +54,7 @@ public final class MineService {
                 cs.set("creationTime", mine.getCreationTime());
                 cs.set("regenTime", mine.getRegenTime());
                 cs.set("logo", mine.getLogo().toString());
+                cs.set("blocks", mine.getSpawningBlocks().stream().map(mineBlock -> mineBlock.getMaterial() + "=" + mineBlock.getChance()).collect(Collectors.joining(":")));
                 cs.set("firstLocation", LocationHelper.locationToString(mine.getFirstLocation()));
                 cs.set("secondLocation", LocationHelper.locationToString(mine.getSecondLocation()));
             }
@@ -73,6 +80,7 @@ public final class MineService {
         section.set("creationTime", mine.getCreationTime());
         section.set("regenTime", mine.getRegenTime());
         section.set("logo", mine.getLogo().toString());
+        section.set("blocks", mine.getSpawningBlocks().stream().map(mineBlock -> mineBlock.getMaterial() + "=" + mineBlock.getChance()).collect(Collectors.joining(":")));
         section.set("firstLocation", LocationHelper.locationToString(mine.getFirstLocation()));
         section.set("secondLocation", LocationHelper.locationToString(mine.getSecondLocation()));
         try {

@@ -35,15 +35,15 @@ public final class Mine {
     private final Hologram hologram;
     private final BukkitTask task;
 
-    public Mine(String name, String owner, long creationTime, long regenTime, Material logo, Location firstLocation, Location secondLocation) {
+    public Mine(String name, String owner, long creationTime, long regenTime, Material logo, List<MineBlock> spawningBlocks, Location firstLocation, Location secondLocation) {
         this.world = firstLocation.getWorld();
         this.name = name;
         this.owner = owner;
         this.creationTime = creationTime;
         this.regenTime = regenTime;
         this.logo = logo;
-        this.spawningBlocks = new ArrayList<>();
-        spawningBlocks.add(new MineBlock(50, Material.STONE));
+        this.spawningBlocks = spawningBlocks;
+        if (spawningBlocks.isEmpty()) spawningBlocks.add(new MineBlock(50, Material.STONE));
         int startX = Math.min(firstLocation.getBlockX(), secondLocation.getBlockX());
         int startY = Math.min(firstLocation.getBlockY(), secondLocation.getBlockY());
         int startZ = Math.min(firstLocation.getBlockZ(), secondLocation.getBlockZ());
