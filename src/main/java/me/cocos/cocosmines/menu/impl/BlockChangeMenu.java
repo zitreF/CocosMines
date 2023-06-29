@@ -5,6 +5,7 @@ import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.data.MineBlock;
 import me.cocos.cocosmines.data.Notification;
 import me.cocos.cocosmines.helper.MaterialHelper;
+import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.runnable.ModificationInfoRunnable;
 import me.cocos.cocosmines.service.ModificationService;
 import me.cocos.menu.Menu;
@@ -28,7 +29,7 @@ public final class BlockChangeMenu extends Menu {
     private final ModificationService modificationService;
 
     public BlockChangeMenu(Mine mine) {
-        super("&8>> &7Zmien bloki", 3);
+        super(LanguageContainer.translate("edit-change-blocks", String.class), 3);
         this.mine = mine;
         this.modificationService = CocosMines.getInstance().getModificationService();
         this.setBlockPlayerInventory(false);
@@ -61,18 +62,14 @@ public final class BlockChangeMenu extends Menu {
                     mine.getSpawningBlocks().remove(mineBlock);
                 } else if (e.isRightClick()) {
                     p.closeInventory();
-                    modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz &a% &7na chacie!", chatEvent -> {
-                        if (chatEvent.getMessage().equalsIgnoreCase("Anuluj")) {
-                            modificationService.removeAction(player.getUniqueId());
-                            return;
-                        }
-                        if (!NumberUtils.isNumber(chatEvent.getMessage())) {
-                            player.sendMessage(ChatHelper.coloredText("&cMusisz wpisac liczbe!"));
+                    modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-percentage-set", String.class), chatEvent -> {
+                        if (!NumberUtils.isDigits(chatEvent.getMessage())) {
+                            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("must-be-number", String.class)));
                             return;
                         }
                         double percent = Double.parseDouble(chatEvent.getMessage());
                         if (percent > 100 || percent < 0) {
-                            player.sendMessage(ChatHelper.coloredText("&c% nie moze byc wiekszy niz 100 lub mniejszy niz 0"));
+                            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("percent-error", String.class)));
                             return;
                         }
                         mineBlock.setChance(percent);
@@ -92,13 +89,12 @@ public final class BlockChangeMenu extends Menu {
         for (MineBlock mineBlock : mine.getSpawningBlocks()) {
             int firstEmpty = this.getInventory().firstEmpty();
             if (firstEmpty == -1) return;
+            List<String> blockInfoLore = new ArrayList<String>(LanguageContainer.translate("block-action-lore", List.class));
             ItemBuilder builder = ItemBuilder.from(mineBlock.getMaterial())
                     .withLore(
-                            "",
-                            "&8[&fLPM&8] &8- &7Usuwa blok z generatora",
-                            "&8[&fPPM&8] &8- &7Ustawia % na wygenerowanie",
-                            "",
-                            "&8● &7Aktualny %&8: &6" + mineBlock.getChance() + "%"
+                            blockInfoLore.stream()
+                                    .map(string -> string.replace("{CHANCE}", String.valueOf(mineBlock.getChance())))
+                                    .toList()
                     );
             this.setItem(builder.build(), firstEmpty).onInventoryClick((event, player) -> {
                 if (event.getClickedInventory() == null || !(event.getClickedInventory().getHolder() instanceof MenuHolder)) return;
@@ -107,18 +103,14 @@ public final class BlockChangeMenu extends Menu {
                     mine.getSpawningBlocks().remove(mineBlock);
                 } else if (event.isRightClick()) {
                     player.closeInventory();
-                    modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz &a% &7na chacie!", chatEvent -> {
-                        if (chatEvent.getMessage().equalsIgnoreCase("Anuluj")) {
-                            modificationService.removeAction(player.getUniqueId());
-                            return;
-                        }
-                        if (!NumberUtils.isNumber(chatEvent.getMessage())) {
-                            player.sendMessage(ChatHelper.coloredText("&cMusisz wpisac liczbe!"));
+                    modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-percentage-set", String.class), chatEvent -> {
+                        if (!NumberUtils.isDigits(chatEvent.getMessage())) {
+                            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("must-be-number", String.class)));
                             return;
                         }
                         double percent = Double.parseDouble(chatEvent.getMessage());
                         if (percent > 100 || percent < 0) {
-                            player.sendMessage(ChatHelper.coloredText("&c% nie moze byc wiekszy niz 100 lub mniejszy niz 0"));
+                            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("percent-error", String.class)));
                             return;
                         }
                         mineBlock.setChance(percent);

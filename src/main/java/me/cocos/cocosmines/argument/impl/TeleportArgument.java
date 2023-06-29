@@ -2,6 +2,7 @@ package me.cocos.cocosmines.argument.impl;
 
 import me.cocos.cocosmines.argument.Argument;
 import me.cocos.cocosmines.data.Mine;
+import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.MineService;
 import me.cocos.menu.helper.ChatHelper;
 import org.bukkit.Location;
@@ -18,12 +19,12 @@ public final class TeleportArgument implements Argument {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length != 2) {
-            player.sendMessage(ChatHelper.coloredText("&8>> &7Poprawne uzycie&8: &e/cocosmine tp <nazwa>"));
+            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine tp" + this.getArguments()));
             return;
         }
         Mine mine = mineService.findMineByName(args[1]);
         if (mine == null) {
-            player.sendMessage(ChatHelper.coloredText("&cNie znaleziono kopalni o nazwie &l" + args[1]));
+            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("cannot-find-mine", String.class) + args[1]));
             return;
         }
         Location first = mine.getFirstLocation().clone();
@@ -34,12 +35,12 @@ public final class TeleportArgument implements Argument {
 
     @Override
     public String getDescription() {
-        return "teleportuje do kopalni";
+        return LanguageContainer.translate("teleport-description", String.class);
     }
 
     @Override
     public String getArguments() {
-        return " <nazwa>";
+        return LanguageContainer.translate("teleport-arguments", String.class);
     }
 
     @Override

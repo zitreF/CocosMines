@@ -59,11 +59,13 @@ public final class MineService {
                 cs.set("firstLocation", LocationHelper.locationToString(mine.getFirstLocation()));
                 cs.set("secondLocation", LocationHelper.locationToString(mine.getSecondLocation()));
             }
-            try {
-                configuration.saveFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            CompletableFuture.runAsync(() -> {
+                try {
+                    configuration.saveFile();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         });
     }
 
@@ -72,7 +74,7 @@ public final class MineService {
     }
 
     public void addMine(Mine mine) {
-        this.mines.add( mine);
+        this.mines.add(mine);
     }
 
     public void createMine(Mine mine) {
@@ -84,11 +86,13 @@ public final class MineService {
         section.set("blocks", mine.getSpawningBlocks().stream().map(mineBlock -> mineBlock.getMaterial() + "=" + mineBlock.getChance()).collect(Collectors.joining(":")));
         section.set("firstLocation", LocationHelper.locationToString(mine.getFirstLocation()));
         section.set("secondLocation", LocationHelper.locationToString(mine.getSecondLocation()));
-        try {
-            configuration.saveFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        CompletableFuture.runAsync(() -> {
+            try {
+                configuration.saveFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public void removeMine(Mine mine) {

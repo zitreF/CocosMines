@@ -1,6 +1,7 @@
 package me.cocos.cocosmines.command;
 
 import me.cocos.cocosmines.argument.Argument;
+import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.ArgumentService;
 import me.cocos.menu.helper.ChatHelper;
 import org.bukkit.command.Command;
@@ -21,7 +22,7 @@ public final class MineCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player player = (Player) sender;
         if (!player.hasPermission("cocosmines.admin")) {
-            player.sendMessage(ChatHelper.coloredText("&8>> &cNie posiadasz uprawnien (cocosmines.admin)"));
+            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("no-permission", String.class)));
             return false;
         }
         if (args.length == 0) {
@@ -44,6 +45,6 @@ public final class MineCommand implements CommandExecutor {
             player.sendMessage(ChatHelper.coloredText("&8&m|&e /cocosmine " + argument.getName() + argument.getArguments() + " &8- &7" + argument.getDescription()));
         }
         player.sendMessage(ChatHelper.coloredText("&8&m|"));
-        player.sendMessage(ChatHelper.coloredText("&8&m|->>&7 Najlepsze kopalnie tylko od kokosa!"));
+        player.sendMessage(ChatHelper.coloredText("&8&m|>>----)&e&l Cocos&6&lMines &8&m(----<<"));
     }
 }

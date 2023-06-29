@@ -2,9 +2,10 @@ package me.cocos.cocosmines.runnable;
 
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.helper.TimeHelper;
+import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.MineService;
-import org.bukkit.event.entity.PlayerDeathEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class MineHologramUpdateRunnable implements Runnable {
@@ -18,11 +19,14 @@ public final class MineHologramUpdateRunnable implements Runnable {
     @Override
     public void run() {
         for (Mine mine : mineService.getMines()) {
-            mine.updateHologram(List.of(
-                    "&8● &a&lGenerator " + mine.getName() + " &8●",
-                    "",
-                    "&a⌚ &fCzas do regeneracji: &a" + TimeHelper.convertMillisecondsToTime(mine.getLastRegenerationTime() - System.currentTimeMillis())
-            ));
+            List<String> hologram = new ArrayList<String>(LanguageContainer.translate("hologram-lines", List.class));
+            mine.updateHologram(
+                    hologram.stream()
+                            .map(string -> string
+                            .replace("{NAME}", mine.getName())
+                            .replace("{TIME}", TimeHelper.convertMillisecondsToTime(mine.getLastRegenerationTime() - System.currentTimeMillis())))
+                            .toList()
+            );
         }
     }
 }

@@ -4,6 +4,7 @@ import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.argument.Argument;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.data.Notification;
+import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.runnable.ModificationInfoRunnable;
 import me.cocos.cocosmines.service.MineService;
 import me.cocos.cocosmines.service.ModificationService;
@@ -30,31 +31,23 @@ public final class CreateArgument implements Argument {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length != 3) {
-            player.sendMessage(ChatHelper.coloredText("&8>> &7Poprawne uzycie&8: &e/cocosmine create <nazwa> <czas-regeneracji>"));
+            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine create" + this.getArguments()));
             return;
         }
-        if (!NumberUtils.isNumber(args[2])) {
-            player.sendMessage(ChatHelper.coloredText("&8>> &7Poprawne uzycie&8: &e/cocosmine create <nazwa> <czas-regeneracji>"));
+        if (!NumberUtils.isDigits(args[2])) {
+            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine create" + this.getArguments()));
             return;
         }
         long regenTime = Long.parseLong(args[2]);
         if (regenTime < 1) {
-            player.sendMessage(ChatHelper.coloredText("&8>> &7Czas regeneracji nie moze byc mniejszy niz 1!"));
+            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("regeneration-time-error", String.class)));
             return;
         }
-        modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz &a\"potwierdz\" &7aby potwierdzic pierwsza lokalizacje", chatEvent -> {
-            if (chatEvent.getMessage().equalsIgnoreCase("anuluj")) {
-                modificationService.removeAction(player.getUniqueId());
-                return;
-            }
-            if (!chatEvent.getMessage().equalsIgnoreCase("potwierdz")) return;
+        modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-first-location", String.class), chatEvent -> {
+            if (!chatEvent.getMessage().equalsIgnoreCase(LanguageContainer.translate("confirm", String.class))) return;
             Location firstBlock = chatEvent.getPlayer().getTargetBlock(Set.of(Material.AIR), 5).getLocation();
-            modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz &a\"potwierdz\" &7aby potwierdzic druga lokalizacje", chatEvent2 -> {
-                if (chatEvent2.getMessage().equalsIgnoreCase("anuluj")) {
-                    modificationService.removeAction(player.getUniqueId());
-                    return;
-                }
-                if (!chatEvent2.getMessage().equalsIgnoreCase("potwierdz")) return;
+            modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-second-location", String.class), chatEvent2 -> {
+                if (!chatEvent2.getMessage().equalsIgnoreCase(LanguageContainer.translate("confirm", String.class))) return;
                 Location secondBlock = chatEvent.getPlayer().getTargetBlock(Set.of(Material.AIR), 5).getLocation();
                 Mine mine = new Mine(args[1], player.getName(), System.currentTimeMillis(), regenTime, Material.BEDROCK, new ArrayList<>(), firstBlock, secondBlock);
                 Bukkit.getScheduler().runTask(CocosMines.getInstance(), mine::regenerate);
@@ -68,12 +61,12 @@ public final class CreateArgument implements Argument {
 
     @Override
     public String getDescription() {
-        return "tworzy kopalnie";
+        return LanguageContainer.translate("create-description", String.class);
     }
 
     @Override
     public String getArguments() {
-        return " <nazwa> <czas-regeneracji>";
+        return LanguageContainer.translate("create-arguments", String.class);
     }
 
     @Override

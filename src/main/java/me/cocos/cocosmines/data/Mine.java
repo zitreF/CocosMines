@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public final class Mine {
 
+    private final MineRegenerationRunnable mineRegenerationRunnable;
     private String name;
     private final String owner;
     private final long creationTime;
@@ -34,7 +35,7 @@ public final class Mine {
     private final Location secondLocation;
 
     private final Hologram hologram;
-    private final BukkitTask task;
+    private BukkitTask task;
 
     public Mine(String name, String owner, long creationTime, long regenTime, Material logo, List<MineBlock> spawningBlocks, Location firstLocation, Location secondLocation) {
         this.world = firstLocation.getWorld();
@@ -53,7 +54,7 @@ public final class Mine {
         int endZ = Math.max(firstLocation.getBlockZ(), secondLocation.getBlockZ());
         this.firstLocation = new Location(world, startX, startY, startZ);
         this.secondLocation = new Location(world, endX, endY, endZ);
-        MineRegenerationRunnable mineRegenerationRunnable = new MineRegenerationRunnable(this);
+        this.mineRegenerationRunnable = new MineRegenerationRunnable(this);
         this.task = Bukkit.getScheduler().runTaskTimer(CocosMines.getInstance(), mineRegenerationRunnable, 20L, regenTime*20L);
         Location firstClone = firstLocation.clone();
         this.hologram = DHAPI.createHologram(UUID.randomUUID().toString(), firstClone.add(secondLocation).multiply(1/2d).add(0.5, 1d, 0.5), false, List.of("Tworze hologram..."));
@@ -123,6 +124,8 @@ public final class Mine {
 
     public void setRegenTime(long regenTime) {
         this.regenTime = regenTime;
+        this.task.cancel();
+        this.task = Bukkit.getScheduler().runTaskTimer(CocosMines.getInstance(), mineRegenerationRunnable, 20L, regenTime*20L);
     }
 
     public Material getLogo() {

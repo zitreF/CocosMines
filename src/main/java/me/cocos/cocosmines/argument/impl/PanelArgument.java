@@ -1,6 +1,7 @@
 package me.cocos.cocosmines.argument.impl;
 
 import me.cocos.cocosmines.argument.Argument;
+import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.menu.MainMenu;
 import org.bukkit.entity.Player;
 
@@ -20,7 +21,7 @@ public final class PanelArgument implements Argument {
 
     @Override
     public String getDescription() {
-        return "otwiera panel z kopalniami";
+        return LanguageContainer.translate("panel-description", String.class);
     }
 
     @Override

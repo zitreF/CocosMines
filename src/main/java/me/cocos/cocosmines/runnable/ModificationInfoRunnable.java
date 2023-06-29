@@ -1,6 +1,7 @@
 package me.cocos.cocosmines.runnable;
 
 import me.cocos.cocosmines.data.Notification;
+import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.ModificationService;
 import me.cocos.menu.helper.ChatHelper;
 import net.md_5.bungee.api.ChatMessageType;
@@ -25,7 +26,7 @@ public final class ModificationInfoRunnable extends BukkitRunnable {
             return;
         }
         Notification notification = modificationService.findAction(player.getUniqueId());
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatHelper.coloredText("&8● &7Wpisz &c\"Anuluj\" &7aby anulowac &8●")));
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatHelper.coloredText(LanguageContainer.translate("modification-actionbar", String.class))));
         player.sendTitle(ChatHelper.coloredText("&8● &e&lCOCOS&6&lMINES &8●"), ChatHelper.coloredText(notification.getNotification()), 0, 30, 5);
     }
 }

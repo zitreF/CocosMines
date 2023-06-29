@@ -3,15 +3,17 @@ package me.cocos.cocosmines.menu;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.helper.LocationHelper;
 import me.cocos.cocosmines.helper.TimeHelper;
+import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.menu.impl.MineEditMenu;
 import me.cocos.cocosmines.service.MineService;
 import me.cocos.menu.Menu;
-import me.cocos.menu.animation.Animation;
 import me.cocos.menu.builder.impl.ItemBuilder;
 import me.cocos.menu.helper.GuiHelper;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class MainMenu extends Menu {
 
@@ -34,14 +36,16 @@ public final class MainMenu extends Menu {
             if (empty == -1) {
                 return;
             }
+            List<String> blockInfoLore = new ArrayList<String>(LanguageContainer.translate("block-info-lore", List.class));
             ItemBuilder item = ItemBuilder.from(mine.getLogo())
                     .withItemName("&a&l" + mine.getName())
                     .withLore(
-                            "",
-                            "&8● &7Tworca: &e" + mine.getOwner(),
-                            "&8● &7Data zalozenia: &e" + TimeHelper.format(mine.getCreationTime()),
-                            "&8● &7Kordy: &e" + LocationHelper.locationToString(mine.getFirstLocation()),
-                            ""
+                            blockInfoLore.stream()
+                                    .map(string -> string
+                                    .replace("{OWNER}", mine.getOwner())
+                                    .replace("{CREATION-TIME}", TimeHelper.format(mine.getCreationTime()))
+                                    .replace("{LOCATION}", LocationHelper.locationToString(mine.getFirstLocation())))
+                                    .toList()
                     );
             this.setItem(item.build(), empty).onInventoryClick((event, player) -> {
                 MineEditMenu mineEditMenu = new MineEditMenu(mine);

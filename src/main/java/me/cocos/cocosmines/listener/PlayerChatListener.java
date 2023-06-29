@@ -1,6 +1,7 @@
 package me.cocos.cocosmines.listener;
 
 import me.cocos.cocosmines.data.Notification;
+import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.ModificationService;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,6 +24,10 @@ public final class PlayerChatListener implements Listener {
             return;
         }
         event.setCancelled(true);
+        if (event.getMessage().equalsIgnoreCase(LanguageContainer.translate("cancel", String.class))) {
+            modificationService.removeAction(player.getUniqueId());
+            return;
+        }
         notification.getConsumer().accept(event);
     }
 }

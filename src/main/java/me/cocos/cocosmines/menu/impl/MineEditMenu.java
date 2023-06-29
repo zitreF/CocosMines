@@ -3,6 +3,7 @@ package me.cocos.cocosmines.menu.impl;
 import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.data.Notification;
+import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.runnable.ModificationInfoRunnable;
 import me.cocos.cocosmines.service.ModificationService;
 import me.cocos.menu.Menu;
@@ -23,36 +24,31 @@ public final class MineEditMenu extends Menu {
     private final Mine mine;
 
     public MineEditMenu(Mine mine) {
-        super("&8>> &7Edytowanie &e&l" + mine.getName(), 3);
+        super(LanguageContainer.translate("editing", String.class) + mine.getName(), 3);
         this.mine = mine;
         ModificationService modificationService = CocosMines.getInstance().getModificationService();
         this.setOnInventoryClick(((event, player) -> event.setCancelled(true)));
         this.setOnInventoryClose((event, player) -> this.dispose());
         GuiHelper.border(this.getInventory(), new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
-        ItemStack name = ItemBuilder.from(Material.NAME_TAG).withItemName("&8● &7Zmien nazwe").build();
-        ItemStack icon = ItemBuilder.from(Material.EMERALD_ORE).withItemName("&8● &7Ustaw ikone").build();
-        ItemStack time = ItemBuilder.from(Material.CLOCK).withItemName("&8● &7Ustaw czas regeneracji").build();
-        ItemStack items = ItemBuilder.from(Material.GRASS_BLOCK).withItemName("&8● &7Zmien itemy").build();
-        ItemStack coords = ItemBuilder.from(Material.COMPASS).withItemName("&8● &7Zmien lokalizacje").build();
-        ItemStack reset = ItemBuilder.from(Material.ANVIL).withItemName("&8● &7Resetuj kopalnie").build();
-        ItemStack teleport = ItemBuilder.from(Material.ENDER_PEARL).withItemName("&8● &7Przeteleportuj").build();
+        ItemStack name = ItemBuilder.from(Material.NAME_TAG).withItemName(LanguageContainer.translate("edit-change-name", String.class)).build();
+        ItemStack icon = ItemBuilder.from(Material.EMERALD_ORE).withItemName(LanguageContainer.translate("edit-change-icon", String.class)).build();
+        ItemStack time = ItemBuilder.from(Material.CLOCK).withItemName(LanguageContainer.translate("edit-change-time-regeneration", String.class)).build();
+        ItemStack blocks = ItemBuilder.from(Material.GRASS_BLOCK).withItemName(LanguageContainer.translate("edit-change-blocks", String.class)).build();
+        ItemStack coords = ItemBuilder.from(Material.COMPASS).withItemName(LanguageContainer.translate("edit-change-location", String.class)).build();
+        ItemStack reset = ItemBuilder.from(Material.ANVIL).withItemName(LanguageContainer.translate("edit-reset-mine", String.class)).build();
+        ItemStack teleport = ItemBuilder.from(Material.ENDER_PEARL).withItemName(LanguageContainer.translate("edit-teleport", String.class)).build();
         this.setItem(name, 10).onInventoryClick((event, player) -> {
             player.closeInventory();
-            modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz nazwe na chacie!", chatEvent -> {
+            modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-change-name", String.class), chatEvent -> {
                 String message = chatEvent.getMessage();
-                if (message.equalsIgnoreCase("anuluj")) {
-                    modificationService.removeAction(player.getUniqueId());
-                    return;
-                }
                 mine.setName(message);
                 modificationService.removeAction(player.getUniqueId());
             }));
-
             new ModificationInfoRunnable(modificationService, player).runTaskTimerAsynchronously(CocosMines.getInstance(), 0, 20);
         });
         this.setItem(icon, 11).onInventoryClick((event, player) -> {
             player.closeInventory();
-            Menu menu = MenuBuilder.from(MenuType.SIMPLE, "&8>> &7Zmien ikone", 1)
+            Menu menu = MenuBuilder.from(MenuType.SIMPLE, LanguageContainer.translate("edit-change-icon", String.class), 1)
                     .blockPlayerInventory(false)
                     .build();
             menu.setOnInventoryClose((event2, player2) -> {
@@ -61,7 +57,7 @@ public final class MineEditMenu extends Menu {
             });
             player.openInventory(menu.getInventory());
         });
-        this.setItem(items, 12).onInventoryClick((event, player) -> {
+        this.setItem(blocks, 12).onInventoryClick((event, player) -> {
             player.closeInventory();
 
             BlockChangeMenu blockChangeMenu = new BlockChangeMenu(mine);
@@ -69,19 +65,11 @@ public final class MineEditMenu extends Menu {
             player.openInventory(blockChangeMenu.getInventory());
         });
         this.setItem(coords, 13).onInventoryClick((event, player) -> {
-            modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz &a\"potwierdz\" &7aby potwierdzic pierwsza lokalizacje", chatEvent -> {
-                if (chatEvent.getMessage().equalsIgnoreCase("anuluj")) {
-                    modificationService.removeAction(player.getUniqueId());
-                    return;
-                }
-                if (!chatEvent.getMessage().equalsIgnoreCase("potwierdz")) return;
+            modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-first-location", String.class), chatEvent -> {
+                if (!chatEvent.getMessage().equalsIgnoreCase(LanguageContainer.translate("confirm", String.class))) return;
                 Location firstBlock = chatEvent.getPlayer().getTargetBlock(Set.of(Material.AIR), 5).getLocation();
-                modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz &a\"potwierdz\" &7aby potwierdzic druga lokalizacje", chatEvent2 -> {
-                    if (chatEvent2.getMessage().equalsIgnoreCase("anuluj")) {
-                        modificationService.removeAction(player.getUniqueId());
-                        return;
-                    }
-                    if (!chatEvent2.getMessage().equalsIgnoreCase("potwierdz")) return;
+                modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-second-location", String.class), chatEvent2 -> {
+                    if (!chatEvent2.getMessage().equalsIgnoreCase(LanguageContainer.translate("confirm", String.class))) return;
                     Location secondBlock = chatEvent.getPlayer().getTargetBlock(Set.of(Material.AIR), 5).getLocation();
                     mine.updateLocation(firstBlock, secondBlock);
                     modificationService.removeAction(player.getUniqueId());
@@ -99,23 +87,21 @@ public final class MineEditMenu extends Menu {
             player.teleport(first.add(second).multiply(1/2d).add(0, bonusY/2d, 0));
         });
         this.setItem(time, 16).onInventoryClick((event, player) -> {
-            modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz &a\"potwierdz\" &7aby potwierdzic druga lokalizacje", chatEvent -> {
-                if (chatEvent.getMessage().equalsIgnoreCase("anuluj")) {
-                    modificationService.removeAction(player.getUniqueId());
-                    return;
-                }
-                if (!NumberUtils.isNumber(chatEvent.getMessage())) {
-                    player.sendMessage(ChatHelper.coloredText("&cMusisz wpisac liczbe!"));
+            player.closeInventory();
+            modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-time-regeneration", String.class), chatEvent -> {
+                if (!NumberUtils.isDigits(chatEvent.getMessage())) {
+                    player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("must-be-number", String.class)));
                     return;
                 }
                 long regenTime = Long.parseLong(chatEvent.getMessage());
                 if (regenTime < 1) {
-                    player.sendMessage(ChatHelper.coloredText("&8>> &7Czas regeneracji nie moze byc mniejszy niz 1!"));
+                    player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("regeneration-time-error", String.class)));
                     return;
                 }
                 mine.setRegenTime(regenTime);
+                modificationService.removeAction(player.getUniqueId());
             }));
-
+            new ModificationInfoRunnable(modificationService, player).runTaskTimerAsynchronously(CocosMines.getInstance(), 0, 20);
         });
 
     }
