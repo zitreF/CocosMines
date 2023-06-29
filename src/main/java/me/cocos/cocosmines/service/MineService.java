@@ -4,6 +4,7 @@ import me.cocos.cocosmines.configuration.MineConfiguration;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.data.MineBlock;
 import me.cocos.cocosmines.helper.LocationHelper;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -38,8 +39,8 @@ public final class MineService {
         Material logo = Material.valueOf(section.getString("logo"));
         List<MineBlock> mineBlocks = Arrays.stream(section.getString("blocks").split(":")).map(string -> {
             String[] split = string.split("=");
-            return new MineBlock(Double.parseDouble(split[0]), Material.valueOf(split[1]));
-        }).toList();
+            return new MineBlock(Double.parseDouble(split[1]), Material.valueOf(split[0]));
+        }).collect(Collectors.toList());
 
         Location firstLocation = LocationHelper.locationFromString(section.getString("firstLocation"));
         Location secondLocation = LocationHelper.locationFromString(section.getString("secondLocation"));
@@ -92,13 +93,16 @@ public final class MineService {
 
     public void removeMine(Mine mine) {
         this.mines.remove(mine);
+        mine.getHologram().delete();
         mine.getTask().cancel();
-        configuration.getConfig().set(mine.getName(), null);
-        try {
-            configuration.saveFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        CompletableFuture.runAsync(() -> {
+            configuration.getConfig().set(mine.getName(), null);
+            try {
+                configuration.saveFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     public List<Mine> getMines() {

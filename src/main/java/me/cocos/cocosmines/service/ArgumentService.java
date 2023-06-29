@@ -5,6 +5,7 @@ import me.cocos.cocosmines.argument.Argument;
 import me.cocos.cocosmines.argument.impl.CreateArgument;
 import me.cocos.cocosmines.argument.impl.PanelArgument;
 import me.cocos.cocosmines.argument.impl.RemoveArgument;
+import me.cocos.cocosmines.argument.impl.TeleportArgument;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +22,8 @@ public final class ArgumentService {
         Stream.of(
                 new CreateArgument(plugin.getMineService(), plugin.getModificationService()),
                 new PanelArgument(plugin.getMainMenu()),
-                new RemoveArgument(plugin.getMineService())
+                new RemoveArgument(plugin.getMineService()),
+                new TeleportArgument(plugin.getMineService())
         ).forEach(command -> arguments.put(command.getName(), command));
     }
     public Argument getArgumentByName(String name) {

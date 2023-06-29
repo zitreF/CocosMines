@@ -16,6 +16,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -55,7 +56,7 @@ public final class Mine {
         MineRegenerationRunnable mineRegenerationRunnable = new MineRegenerationRunnable(this);
         this.task = Bukkit.getScheduler().runTaskTimer(CocosMines.getInstance(), mineRegenerationRunnable, 20L, regenTime*20L);
         Location firstClone = firstLocation.clone();
-        this.hologram = DHAPI.createHologram(this.name, firstClone.add(secondLocation).multiply(1/2d), false, List.of("Tworze hologram..."));
+        this.hologram = DHAPI.createHologram(UUID.randomUUID().toString(), firstClone.add(secondLocation).multiply(1/2d).add(0.5, 1d, 0.5), false, List.of("Tworze hologram..."));
     }
 
     public void regenerate() {

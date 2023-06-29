@@ -55,11 +55,12 @@ public final class BlockChangeMenu extends Menu {
                             "&8● &7Aktualny %&8: &6" + mineBlock.getChance() + "%"
                     );
             this.setItem(builder.build(), firstEmpty).onInventoryClick((e, p) -> {
-                if (event.getClickedInventory() == null || !(event.getClickedInventory().getHolder() instanceof MenuHolder)) return;
+                if (e.getClickedInventory() == null || !(e.getClickedInventory().getHolder() instanceof MenuHolder)) return;
                 if (e.isLeftClick()) {
                     this.setItem((ItemStack) null, firstEmpty);
                     mine.getSpawningBlocks().remove(mineBlock);
                 } else if (e.isRightClick()) {
+                    p.closeInventory();
                     modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz &a% &7na chacie!", chatEvent -> {
                         if (chatEvent.getMessage().equalsIgnoreCase("Anuluj")) {
                             modificationService.removeAction(player.getUniqueId());
@@ -105,6 +106,7 @@ public final class BlockChangeMenu extends Menu {
                     this.setItem((ItemStack) null, firstEmpty);
                     mine.getSpawningBlocks().remove(mineBlock);
                 } else if (event.isRightClick()) {
+                    player.closeInventory();
                     modificationService.addAction(player.getUniqueId(), new Notification("&7Napisz &a% &7na chacie!", chatEvent -> {
                         if (chatEvent.getMessage().equalsIgnoreCase("Anuluj")) {
                             modificationService.removeAction(player.getUniqueId());

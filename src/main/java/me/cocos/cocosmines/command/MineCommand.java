@@ -41,7 +41,7 @@ public final class MineCommand implements CommandExecutor {
         player.sendMessage(ChatHelper.coloredText("&8&m|>>----)&e&l Cocos&6&lMines &8&m(----<<"));
         player.sendMessage(ChatHelper.coloredText("&8&m|"));
         for (Argument argument : argumentService.getArguments()) {
-            player.sendMessage(ChatHelper.coloredText("&8&m|&e /cocosmines " + argument.getName() + argument.getArguments() + " &8- &7" + argument.getDescription()));
+            player.sendMessage(ChatHelper.coloredText("&8&m|&e /cocosmine " + argument.getName() + argument.getArguments() + " &8- &7" + argument.getDescription()));
         }
         player.sendMessage(ChatHelper.coloredText("&8&m|"));
         player.sendMessage(ChatHelper.coloredText("&8&m|->>&7 Najlepsze kopalnie tylko od kokosa!"));
