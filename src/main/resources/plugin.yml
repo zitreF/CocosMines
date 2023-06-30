@@ -1,7 +1,7 @@
 name: CocosMines
 version: '${version}'
 main: me.cocos.cocosmines.CocosMines
-api-version: 1.17
+api-version: 1.13
 author: Cocos
 depend:
   - DecentHolograms

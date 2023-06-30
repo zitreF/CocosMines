@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'me.cocos'
-version = '1.1-SNAPSHOT'
+version = '1.2-SNAPSHOT'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -32,7 +32,7 @@ dependencies {
     compileOnly 'com.github.decentsoftware-eu:decentholograms:2.8.3'
 }
 
-def targetJavaVersion = 16
+def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion

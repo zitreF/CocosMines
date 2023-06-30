@@ -14,7 +14,7 @@ public final class MineRegenerationRunnable implements Runnable {
 
     @Override
     public void run() {
-        mine.regenerate();
         mine.setLastRegenerationTime(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(mine.getRegenTime()));
+        mine.regenerate();
     }
 }

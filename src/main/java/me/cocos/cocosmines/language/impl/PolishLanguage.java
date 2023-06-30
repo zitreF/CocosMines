@@ -40,7 +40,7 @@ public final class PolishLanguage implements Language {
         this.translations.put("hologram-lines", List.of(
                 "&8● &a&lGenerator {NAME} &8●",
                 "",
-                "&a⌚ &fTime until regeneration: &a{TIME}")
+                "&a⌚ &fCzas do regeneracji: &a{TIME}")
         );
         // lores
         this.translations.put("block-action-lore", List.of(
