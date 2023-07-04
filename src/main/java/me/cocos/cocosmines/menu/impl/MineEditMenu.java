@@ -65,6 +65,7 @@ public final class MineEditMenu extends Menu {
             player.openInventory(blockChangeMenu.getInventory());
         });
         this.setItem(coords, 13).onInventoryClick((event, player) -> {
+            player.closeInventory();
             modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-first-location", String.class), chatEvent -> {
                 if (!chatEvent.getMessage().equalsIgnoreCase(LanguageContainer.translate("confirm", String.class))) return;
                 Location firstBlock = chatEvent.getPlayer().getTargetBlock(Set.of(Material.AIR), 5).getLocation();
@@ -78,9 +79,11 @@ public final class MineEditMenu extends Menu {
             new ModificationInfoRunnable(modificationService, player).runTaskTimerAsynchronously(CocosMines.getInstance(), 0, 20);
         });
         this.setItem(reset, 14).onInventoryClick((event, player) -> {
+            player.closeInventory();
             mine.regenerate();
         });
         this.setItem(teleport, 15).onInventoryClick((event, player) -> {
+            player.closeInventory();
             Location first = mine.getFirstLocation().clone();
             Location second = mine.getSecondLocation().clone();
             int bonusY = second.getBlockY()-first.getBlockY();
