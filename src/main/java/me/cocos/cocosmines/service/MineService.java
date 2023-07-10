@@ -1,5 +1,6 @@
 package me.cocos.cocosmines.service;
 
+import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.configuration.MineConfiguration;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.data.MineBlock;
@@ -26,7 +27,6 @@ public final class MineService {
         this.mines = section
                 .getKeys(false)
                 .stream()
-                .peek(System.out::println)
                 .map(section::getConfigurationSection)
                 .map(this::loadMine)
                 .collect(Collectors.toList());

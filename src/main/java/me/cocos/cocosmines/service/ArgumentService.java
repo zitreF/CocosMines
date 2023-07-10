@@ -21,7 +21,7 @@ public final class ArgumentService {
         this.arguments = new HashMap<>();
         Stream.of(
                 new CreateArgument(plugin.getMineService(), plugin.getModificationService()),
-                new PanelArgument(plugin.getMainMenu()),
+                new PanelArgument(plugin.getMineService().getMines()),
                 new RemoveArgument(plugin.getMineService()),
                 new TeleportArgument(plugin.getMineService())
         ).forEach(command -> arguments.put(command.getName(), command));

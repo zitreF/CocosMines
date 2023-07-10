@@ -1,5 +1,6 @@
 package me.cocos.cocosmines.argument.impl;
 
+import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.argument.Argument;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.language.LanguageContainer;

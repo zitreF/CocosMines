@@ -7,7 +7,6 @@ import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.language.impl.EnglishLanguage;
 import me.cocos.cocosmines.language.impl.PolishLanguage;
 import me.cocos.cocosmines.listener.PlayerChatListener;
-import me.cocos.cocosmines.menu.MainMenu;
 import me.cocos.cocosmines.runnable.MineHologramUpdateRunnable;
 import me.cocos.cocosmines.service.ArgumentService;
 import me.cocos.cocosmines.service.MineService;
@@ -22,7 +21,6 @@ public final class CocosMines extends JavaPlugin {
 
     private static CocosMines instance;
     private MineService mineService;
-    private MainMenu mainMenu;
     private ModificationService modificationService;
 
     @Override
@@ -44,7 +42,6 @@ public final class CocosMines extends JavaPlugin {
         }
         this.mineService = new MineService(mineConfiguration);
         this.modificationService = new ModificationService();
-        this.mainMenu = new MainMenu(mineService);
         ArgumentService argumentService = new ArgumentService(this);
         this.getServer().getPluginManager().registerEvents(new PlayerChatListener(modificationService), this);
         this.getCommand("cocosmine").setExecutor(new MineCommand(argumentService));
@@ -67,10 +64,6 @@ public final class CocosMines extends JavaPlugin {
 
     public ModificationService getModificationService() {
         return modificationService;
-    }
-
-    public MainMenu getMainMenu() {
-        return mainMenu;
     }
 
     public static CocosMines getInstance() {
