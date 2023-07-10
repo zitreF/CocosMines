@@ -7,3 +7,5 @@ depend:
   - DecentHolograms
 commands:
   cocosmine:
+    aliases:
+      - cm

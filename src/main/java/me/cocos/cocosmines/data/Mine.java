@@ -76,17 +76,27 @@ public final class Mine {
             for (Block block : blocks) {
                 block.removeMetadata("mine", CocosMines.getInstance());
             }
+            blocks.clear();
         }
-        this.firstLocation.setX(Math.min(first.getBlockX(), second.getBlockX()));
-        this.firstLocation.setY(Math.min(first.getBlockY(), second.getBlockY()));
-        this.firstLocation.setZ(Math.min(first.getBlockZ(), second.getBlockZ()));
-        this.secondLocation.setX(Math.max(first.getBlockX(), second.getBlockX()));
-        this.secondLocation.setY(Math.max(first.getBlockY(), second.getBlockY()));
-        this.secondLocation.setZ(Math.max(first.getBlockZ(), second.getBlockZ()));
-        this.hologram.setLocation(firstLocation.clone().add(secondLocation).multiply(1/2d));
-        for (int y = firstLocation.getBlockY(); y <= secondLocation.getBlockY(); y++) {
-            for (int x = firstLocation.getBlockX(); x <= secondLocation.getBlockX(); x++) {
-                for (int z = firstLocation.getBlockZ(); z <= secondLocation.getBlockZ(); z++) {
+
+        int minX = Math.min(first.getBlockX(), second.getBlockX());
+        int minY = Math.min(first.getBlockY(), second.getBlockY());
+        int minZ = Math.min(first.getBlockZ(), second.getBlockZ());
+        int maxX = Math.max(first.getBlockX(), second.getBlockX());
+        int maxY = Math.max(first.getBlockY(), second.getBlockY());
+        int maxZ = Math.max(first.getBlockZ(), second.getBlockZ());
+
+        this.firstLocation.setX(minX);
+        this.firstLocation.setY(minY);
+        this.firstLocation.setZ(minZ);
+        this.secondLocation.setX(maxX);
+        this.secondLocation.setY(maxY);
+        this.secondLocation.setZ(maxZ);
+        this.hologram.setLocation(firstLocation.clone().add(secondLocation).multiply(0.5d));
+
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
                     Block block = world.getBlockAt(x, y, z);
                     block.setMetadata("mine", METADATA_VALUE);
                     this.blocks.add(block);
