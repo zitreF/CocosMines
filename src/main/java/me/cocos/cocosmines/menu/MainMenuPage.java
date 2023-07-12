@@ -21,15 +21,12 @@ import java.util.List;
 public final class MainMenuPage extends Menu {
 
     private final Pagination<Mine> pagination;
-    private final List<Mine> mines;
     private int page;
 
     public MainMenuPage(List<Mine> mines, int page) {
         super("&8>> &e&lCocos&6&lMines", 6);
         this.pagination = new Pagination<>(28, mines);
         this.page = page;
-        System.out.println(" ASDFSDFF " + page);
-        this.mines = mines;
         this.setOnInventoryClick((event, player) -> {
             event.setCancelled(true);
         });

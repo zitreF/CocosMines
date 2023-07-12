@@ -48,7 +48,7 @@ public final class BlockChangeMenu extends Menu {
                 return;
             }
             MineBlock mineBlock = new MineBlock(50, clickedBlock.getType());
-            mine.getSpawningBlocks().add(mineBlock);
+            mine.addSpawningBlock(mineBlock);
             int firstEmpty = this.getInventory().firstEmpty();
             if (firstEmpty == -1) return;
             List<String> blockInfoLore = new ArrayList<String>(LanguageContainer.translate("block-action-lore", List.class));
@@ -89,7 +89,7 @@ public final class BlockChangeMenu extends Menu {
         if (event.getClickedInventory() == null || !(event.getClickedInventory().getHolder() instanceof MenuHolder)) return;
         if (event.isLeftClick()) {
             this.setItem((ItemStack) null, firstEmpty);
-            mine.getSpawningBlocks().remove(mineBlock);
+            mine.removeSpawningBlock(mineBlock);
         } else if (event.isRightClick()) {
             player.closeInventory();
             modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-percentage-set", String.class), chatEvent -> {
@@ -102,7 +102,7 @@ public final class BlockChangeMenu extends Menu {
                     player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("percent-error", String.class)));
                     return;
                 }
-                mineBlock.setChance(percent);
+                mine.updateMineBlockChance(mineBlock, percent);
                 modificationService.removeAction(player.getUniqueId());
                 BlockChangeMenu blockChangeMenu = new BlockChangeMenu(mine);
                 Bukkit.getScheduler().runTask(CocosMines.getInstance(), () -> player.openInventory(blockChangeMenu.getInventory()));

@@ -5,6 +5,7 @@ api-version: 1.13
 author: Cocos
 depend:
   - DecentHolograms
+  - WorldEdit
 commands:
   cocosmine:
     aliases:

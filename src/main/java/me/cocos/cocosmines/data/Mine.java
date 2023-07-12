@@ -1,29 +1,27 @@
 package me.cocos.cocosmines.data;
 
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.function.pattern.RandomPattern;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.regions.Region;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.cocos.cocosmines.CocosMines;
-import me.cocos.cocosmines.helper.ChanceHelper;
-import me.cocos.cocosmines.helper.MaterialHelper;
-import me.cocos.cocosmines.runnable.MineRegenerationRunnable;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Mine {
 
     private static final FixedMetadataValue METADATA_VALUE = new FixedMetadataValue(CocosMines.getInstance(), "mine");
-    private final MineRegenerationRunnable mineRegenerationRunnable;
     private String name;
     private final String owner;
     private final long creationTime;
@@ -33,12 +31,13 @@ public final class Mine {
     private Material logo;
     private final List<MineBlock> spawningBlocks;
     private final List<Block> blocks;
-    private final List<List<Block>> splitList;
     private final Location firstLocation;
     private final Location secondLocation;
+    private RandomPattern randomPattern;
 
     private final Hologram hologram;
-    private BukkitTask task;
+
+    private Region region;
 
     public Mine(String name, String owner, long creationTime, long regenTime, Material logo, List<MineBlock> spawningBlocks, Location firstLocation, Location secondLocation) {
         this.world = firstLocation.getWorld();
@@ -53,39 +52,23 @@ public final class Mine {
         secondLocation.setWorld(world);
         if (spawningBlocks.isEmpty()) spawningBlocks.add(new MineBlock(50, Material.STONE));
         this.blocks = new ArrayList<>();
-        this.mineRegenerationRunnable = new MineRegenerationRunnable(this);
-        this.task = Bukkit.getScheduler().runTaskTimer(CocosMines.getInstance(), mineRegenerationRunnable, 20L, regenTime*20L);
         Location firstClone = firstLocation.clone();
         this.hologram = DHAPI.createHologram(UUID.randomUUID().toString(), firstClone.add(secondLocation).multiply(1/2d).add(0.5, 1d, 0.5), false, List.of("Tworze hologram..."));
         this.updateLocation(firstLocation, secondLocation);
-        this.splitList = new ArrayList<>();
-        int blockSize = blocks.size() / 4;
-        int remainingBlocks = blocks.size() % 4;
-        int currentIndex = 0;
+        this.updateRandomPattern();
+    }
 
-        for (int i = 0; i < 4; i++) {
-            int size = blockSize + (i < remainingBlocks ? 1 : 0);
-            List<Block> sublist = blocks.subList(currentIndex, currentIndex + size);
-            splitList.add(sublist);
-            currentIndex += size;
+    private void updateRandomPattern() {
+        this.randomPattern = new RandomPattern();
+        for (MineBlock mineBlock : this.spawningBlocks) {
+            randomPattern.add(BukkitAdapter.adapt(mineBlock.getMaterial().createBlockData()), mineBlock.getChance());
         }
     }
 
+
     public void regenerate() {
-        new BukkitRunnable() {
-            private int currentIndex = 0;
-            @Override
-            public void run() {
-                for (Block block : splitList.get(currentIndex)) {
-                    Material randomMaterial = ChanceHelper.getRandomMaterial(spawningBlocks);
-                    block.setType(randomMaterial);
-                }
-                currentIndex++;
-                if (currentIndex == splitList.size()) {
-                    this.cancel();
-                }
-            }
-        }.runTaskTimer(CocosMines.getInstance(), 0, 1);
+        EditSession editSession = CocosMines.getInstance().getEditSession(region.getWorld());
+        editSession.setBlocks(region, this.randomPattern);
     }
 
     public long getLastRegenerationTime() {
@@ -103,7 +86,6 @@ public final class Mine {
             }
             blocks.clear();
         }
-
         int minX = Math.min(first.getBlockX(), second.getBlockX());
         int minY = Math.min(first.getBlockY(), second.getBlockY());
         int minZ = Math.min(first.getBlockZ(), second.getBlockZ());
@@ -128,6 +110,8 @@ public final class Mine {
                 }
             }
         }
+        this.region = new CuboidRegion(BukkitAdapter.adapt(firstLocation.getWorld()), BlockVector3.at(firstLocation.getX(), firstLocation.getY(),
+                firstLocation.getZ()), BlockVector3.at(secondLocation.getX(), secondLocation.getY(), secondLocation.getZ()));
     }
 
     public void updateHologram(List<String> lines) {
@@ -164,8 +148,6 @@ public final class Mine {
 
     public void setRegenTime(long regenTime) {
         this.regenTime = regenTime;
-        this.task.cancel();
-        this.task = Bukkit.getScheduler().runTaskTimer(CocosMines.getInstance(), mineRegenerationRunnable, 20L, regenTime*20L);
     }
 
     public Material getLogo() {
@@ -174,6 +156,21 @@ public final class Mine {
 
     public void setLogo(Material logo) {
         this.logo = logo;
+    }
+
+    public void addSpawningBlock(MineBlock mineBlock) {
+        this.spawningBlocks.add(mineBlock);
+        this.updateRandomPattern();
+    }
+
+    public void removeSpawningBlock(MineBlock mineBlock) {
+        this.spawningBlocks.remove(mineBlock);
+        this.updateRandomPattern();
+    }
+
+    public void updateMineBlockChance(MineBlock block, double percent) {
+        block.setChance(percent);
+        this.updateRandomPattern();
     }
 
     public List<MineBlock> getSpawningBlocks() {
@@ -186,10 +183,6 @@ public final class Mine {
 
     public Location getSecondLocation() {
         return secondLocation;
-    }
-
-    public BukkitTask getTask() {
-        return task;
     }
 
 }

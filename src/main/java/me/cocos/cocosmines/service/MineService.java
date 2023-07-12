@@ -98,7 +98,6 @@ public final class MineService {
     public void removeMine(Mine mine) {
         this.mines.remove(mine);
         mine.getHologram().delete();
-        mine.getTask().cancel();
         CompletableFuture.runAsync(() -> {
             configuration.getConfig().set(mine.getName(), null);
             try {
