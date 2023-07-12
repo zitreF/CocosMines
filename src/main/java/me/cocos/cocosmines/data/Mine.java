@@ -4,6 +4,7 @@ import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.helper.ChanceHelper;
+import me.cocos.cocosmines.helper.MaterialHelper;
 import me.cocos.cocosmines.runnable.MineRegenerationRunnable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -11,11 +12,13 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class Mine {
 
@@ -30,6 +33,7 @@ public final class Mine {
     private Material logo;
     private final List<MineBlock> spawningBlocks;
     private final List<Block> blocks;
+    private final List<List<Block>> splitList;
     private final Location firstLocation;
     private final Location secondLocation;
 
@@ -54,13 +58,34 @@ public final class Mine {
         Location firstClone = firstLocation.clone();
         this.hologram = DHAPI.createHologram(UUID.randomUUID().toString(), firstClone.add(secondLocation).multiply(1/2d).add(0.5, 1d, 0.5), false, List.of("Tworze hologram..."));
         this.updateLocation(firstLocation, secondLocation);
+        this.splitList = new ArrayList<>();
+        int blockSize = blocks.size() / 4;
+        int remainingBlocks = blocks.size() % 4;
+        int currentIndex = 0;
+
+        for (int i = 0; i < 4; i++) {
+            int size = blockSize + (i < remainingBlocks ? 1 : 0);
+            List<Block> sublist = blocks.subList(currentIndex, currentIndex + size);
+            splitList.add(sublist);
+            currentIndex += size;
+        }
     }
 
     public void regenerate() {
-        for (Block block : blocks) {
-            Material material = ChanceHelper.getRandomMaterial(this.spawningBlocks);
-            block.setType(material);
-        }
+        new BukkitRunnable() {
+            private int currentIndex = 0;
+            @Override
+            public void run() {
+                for (Block block : splitList.get(currentIndex)) {
+                    Material randomMaterial = ChanceHelper.getRandomMaterial(spawningBlocks);
+                    block.setType(randomMaterial);
+                }
+                currentIndex++;
+                if (currentIndex == splitList.size()) {
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(CocosMines.getInstance(), 0, 1);
     }
 
     public long getLastRegenerationTime() {

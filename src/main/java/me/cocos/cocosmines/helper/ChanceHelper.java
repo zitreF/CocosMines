@@ -12,21 +12,13 @@ public final class ChanceHelper {
     private ChanceHelper() {}
 
     public static Material getRandomMaterial(List<MineBlock> blocks) {
-        double totalChance = 0.0;
-        for (MineBlock block : blocks) {
-            totalChance += block.getChance();
+        if (blocks.isEmpty()) {
+            return Material.STONE;
         }
-
-        double randNum = Math.random() * totalChance;
-        double cumulativeChance = 0.0;
-
-        for (MineBlock block : blocks) {
-            cumulativeChance += block.getChance();
-            if (randNum <= cumulativeChance) {
-                return block.getMaterial();
-            }
-        }
-
-        return blocks.get(ThreadLocalRandom.current().nextInt(blocks.size())).getMaterial();
+        return blocks.stream()
+                .filter(block -> ThreadLocalRandom.current().nextDouble(100) < block.getChance())
+                .map(MineBlock::getMaterial)
+                .findFirst()
+                .orElseGet(() -> ChanceHelper.getRandomMaterial(blocks));
     }
 }
