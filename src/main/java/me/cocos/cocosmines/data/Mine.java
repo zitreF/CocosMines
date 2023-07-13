@@ -1,5 +1,6 @@
 package me.cocos.cocosmines.data;
 
+import com.fastasyncworldedit.core.FaweAPI;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.RandomPattern;
@@ -67,8 +68,7 @@ public final class Mine {
 
 
     public void regenerate() {
-        EditSession editSession = CocosMines.getInstance().getEditSession(region.getWorld());
-        editSession.setBlocks(region, this.randomPattern);
+        FaweAPI.getWorld(region.getWorld().getName()).setBlocks(region, this.randomPattern);
     }
 
     public long getLastRegenerationTime() {
