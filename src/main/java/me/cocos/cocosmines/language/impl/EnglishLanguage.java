@@ -64,6 +64,7 @@ public final class EnglishLanguage implements Language {
         this.translations.put("create-description", "creates a mine");
         this.translations.put("create-arguments", " <name> <regeneration-time>");
 
+        this.translations.put("panel-no-mines", "&cThere are no mines created!");
         this.translations.put("panel-description", "opens the mine panel");
 
         this.translations.put("teleport-description", "teleports to a mine");
@@ -72,6 +73,9 @@ public final class EnglishLanguage implements Language {
         this.translations.put("remove-mine-message", "&aSuccessfully removed mine &l");
         this.translations.put("remove-description", "removes a mine");
         this.translations.put("remove-arguments", " <name>");
+
+        this.translations.put("list-message", "&7List of mines&8:");
+        this.translations.put("list-description", "list of mines");
     }
 
     @Override

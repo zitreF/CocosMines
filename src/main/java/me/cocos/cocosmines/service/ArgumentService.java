@@ -2,10 +2,7 @@ package me.cocos.cocosmines.service;
 
 import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.argument.Argument;
-import me.cocos.cocosmines.argument.impl.CreateArgument;
-import me.cocos.cocosmines.argument.impl.PanelArgument;
-import me.cocos.cocosmines.argument.impl.RemoveArgument;
-import me.cocos.cocosmines.argument.impl.TeleportArgument;
+import me.cocos.cocosmines.argument.impl.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +18,8 @@ public final class ArgumentService {
         this.arguments = new HashMap<>();
         Stream.of(
                 new CreateArgument(plugin.getMineService(), plugin.getModificationService()),
-                new PanelArgument(plugin.getMineService().getMines()),
+                new PanelArgument(plugin.getMineService()),
+                new ListArgument(plugin.getMineService()),
                 new RemoveArgument(plugin.getMineService()),
                 new TeleportArgument(plugin.getMineService())
         ).forEach(command -> arguments.put(command.getName(), command));

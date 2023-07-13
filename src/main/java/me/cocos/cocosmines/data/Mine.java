@@ -68,7 +68,8 @@ public final class Mine {
 
 
     public void regenerate() {
-        FaweAPI.getWorld(region.getWorld().getName()).setBlocks(region, this.randomPattern);
+        EditSession editSession = CocosMines.getInstance().getEditSession(region.getWorld());
+        editSession.setBlocks(region, this.randomPattern);
     }
 
     public long getLastRegenerationTime() {

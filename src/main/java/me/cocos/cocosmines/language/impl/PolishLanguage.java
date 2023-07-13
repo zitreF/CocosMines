@@ -64,6 +64,7 @@ public final class PolishLanguage implements Language {
         this.translations.put("create-description", "tworzy kopalnie");
         this.translations.put("create-arguments", " <nazwa> <czas-regeneracji>");
 
+        this.translations.put("panel-no-mines", "&cNie ma stworzonych zadnych kopalni!");
         this.translations.put("panel-description", "otwiera panel z kopalniami");
 
         this.translations.put("teleport-description", "teleportuje do kopalni");
@@ -72,6 +73,9 @@ public final class PolishLanguage implements Language {
         this.translations.put("remove-mine-message", "&aPomyslnie usunieto kopalnie &l");
         this.translations.put("remove-description", "usuwa kopalnie");
         this.translations.put("remove-arguments", " <nazwa>");
+
+        this.translations.put("list-message", "&7Lista kopalni&8:");
+        this.translations.put("list-description", "lista kopalni");
     }
 
     @Override

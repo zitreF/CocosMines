@@ -1,33 +1,33 @@
 package me.cocos.cocosmines.argument.impl;
 
 import me.cocos.cocosmines.argument.Argument;
+import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.language.LanguageContainer;
-import me.cocos.cocosmines.menu.MainMenuPage;
 import me.cocos.cocosmines.service.MineService;
 import me.cocos.menu.helper.ChatHelper;
 import org.bukkit.entity.Player;
 
-public final class PanelArgument implements Argument {
+public final class ListArgument implements Argument {
 
     private final MineService mineService;
 
-    public PanelArgument(MineService mineService) {
+    public ListArgument(MineService mineService) {
         this.mineService = mineService;
     }
 
     @Override
     public void execute(Player player, String[] args) {
-        if (mineService.getMines().isEmpty()) {
-            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("panel-no-mines", String.class)));
-            return;
+        player.sendMessage("");
+        player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("list-message", String.class)));
+        for (Mine mine : mineService.getMines()) {
+            player.sendMessage(ChatHelper.coloredText("&8- &f" + mine.getName() + " &8- &7" + mine.getOwner()));
         }
-        MainMenuPage mainMenuPage = new MainMenuPage(mineService.getMines(), 0);
-        player.openInventory(mainMenuPage.getInventory());
+        player.sendMessage("");
     }
 
     @Override
     public String getDescription() {
-        return LanguageContainer.translate("panel-description", String.class);
+        return LanguageContainer.translate("list-description", String.class);
     }
 
     @Override
@@ -37,6 +37,6 @@ public final class PanelArgument implements Argument {
 
     @Override
     public String getName() {
-        return "panel";
+        return "list";
     }
 }
