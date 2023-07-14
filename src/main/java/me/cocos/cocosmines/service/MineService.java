@@ -1,35 +1,36 @@
 package me.cocos.cocosmines.service;
 
-import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.configuration.MineConfiguration;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.data.MineBlock;
+import me.cocos.cocosmines.data.Region;
 import me.cocos.cocosmines.helper.LocationHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public final class MineService {
 
-    private final List<Mine> mines;
+    private final RegionService regionService;
     private final MineConfiguration configuration;
 
     public MineService(MineConfiguration configuration) {
         this.configuration = configuration;
+        this.regionService = new RegionService();
+
         ConfigurationSection section = configuration.getConfig().getConfigurationSection("");
-        this.mines = section
-                .getKeys(false)
-                .stream()
-                .map(section::getConfigurationSection)
-                .map(this::loadMine)
-                .collect(Collectors.toList());
+        for (String key : section.getKeys(false)) {
+            ConfigurationSection mineSection = section.getConfigurationSection(key);
+            Mine mine = this.loadMine(mineSection);
+            regionService.addMineToRegion(mine);
+        }
     }
 
     private Mine loadMine(ConfigurationSection section) {
@@ -49,7 +50,7 @@ public final class MineService {
 
     public void saveMines() {
         CompletableFuture.runAsync(() -> {
-            for (Mine mine : mines) {
+            for (Mine mine : regionService.getAllMines()) {
                 ConfigurationSection cs = configuration.getConfig().getConfigurationSection(mine.getName());
                 cs.set("owner", mine.getOwner());
                 cs.set("creationTime", mine.getCreationTime());
@@ -70,14 +71,23 @@ public final class MineService {
     }
 
     public Mine findMineByName(String name) {
-        return this.mines.stream().filter(mine -> mine.getName().equals(name)).findFirst().orElse(null);
+        return regionService.findMineByName(name);
     }
 
     public void addMine(Mine mine) {
-        this.mines.add(mine);
+        regionService.addMineToRegion(mine);
+    }
+
+    public Mine findMineByBlock(Location blockLocation) {
+        Region region = regionService.getRegionByLocation(blockLocation);
+        if (region != null) {
+            return region.getMine();
+        }
+        return null;
     }
 
     public void createMine(Mine mine) {
+        regionService.addMineToRegion(mine);
         ConfigurationSection section = configuration.getConfig().createSection(mine.getName());
         section.set("owner", mine.getOwner());
         section.set("creationTime", mine.getCreationTime());
@@ -96,7 +106,7 @@ public final class MineService {
     }
 
     public void removeMine(Mine mine) {
-        this.mines.remove(mine);
+        regionService.removeMineFromRegion(mine);
         mine.getHologram().delete();
         CompletableFuture.runAsync(() -> {
             configuration.getConfig().set(mine.getName(), null);
@@ -109,6 +119,6 @@ public final class MineService {
     }
 
     public List<Mine> getMines() {
-        return Collections.unmodifiableList(this.mines);
+        return Collections.unmodifiableList(regionService.getAllMines());
     }
 }

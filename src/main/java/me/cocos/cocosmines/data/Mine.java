@@ -22,7 +22,6 @@ import java.util.UUID;
 
 public final class Mine {
 
-    private static final FixedMetadataValue METADATA_VALUE = new FixedMetadataValue(CocosMines.getInstance(), "mine");
     private String name;
     private final String owner;
     private final long creationTime;
@@ -31,7 +30,6 @@ public final class Mine {
     private final World world;
     private Material logo;
     private final List<MineBlock> spawningBlocks;
-    private final List<Block> blocks;
     private final Location firstLocation;
     private final Location secondLocation;
     private RandomPattern randomPattern;
@@ -52,7 +50,6 @@ public final class Mine {
         this.secondLocation = secondLocation;
         secondLocation.setWorld(world);
         if (spawningBlocks.isEmpty()) spawningBlocks.add(new MineBlock(50, Material.STONE));
-        this.blocks = new ArrayList<>();
         Location firstClone = firstLocation.clone();
         this.hologram = DHAPI.createHologram(UUID.randomUUID().toString(), firstClone.add(secondLocation).multiply(1/2d).add(0.5, 1d, 0.5), false, List.of("Tworze hologram..."));
         this.updateLocation(firstLocation, secondLocation);
@@ -81,12 +78,6 @@ public final class Mine {
     }
 
     public void updateLocation(Location first, Location second) {
-        if (!blocks.isEmpty()) {
-            for (Block block : blocks) {
-                block.removeMetadata("mine", CocosMines.getInstance());
-            }
-            blocks.clear();
-        }
         int minX = Math.min(first.getBlockX(), second.getBlockX());
         int minY = Math.min(first.getBlockY(), second.getBlockY());
         int minZ = Math.min(first.getBlockZ(), second.getBlockZ());
@@ -102,15 +93,6 @@ public final class Mine {
         this.secondLocation.setZ(maxZ);
         this.hologram.setLocation(firstLocation.clone().add(secondLocation).multiply(0.5d));
 
-        for (int x = minX; x <= maxX; x++) {
-            for (int y = minY; y <= maxY; y++) {
-                for (int z = minZ; z <= maxZ; z++) {
-                    Block block = world.getBlockAt(x, y, z);
-                    block.setMetadata("mine", METADATA_VALUE);
-                    this.blocks.add(block);
-                }
-            }
-        }
         this.region = new CuboidRegion(BukkitAdapter.adapt(firstLocation.getWorld()), BlockVector3.at(firstLocation.getX(), firstLocation.getY(),
                 firstLocation.getZ()), BlockVector3.at(secondLocation.getX(), secondLocation.getY(), secondLocation.getZ()));
     }

@@ -47,13 +47,13 @@ public final class CocosMines extends JavaPlugin {
         }
         if (Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
             Logger.getLogger("cocosmines").log(Level.WARNING, "Couldn't find FastAsyncWorldEdit (FAWE) plugin. Cocosmines has been disabled!");
-            Logger.getLogger("cocomines").log(Level.INFO, "Download FAWE here: https://www.spigotmc.org/resources/fastasyncworldedit.13932/");
+            Logger.getLogger("cocosmines").log(Level.INFO, "Download FAWE here: https://www.spigotmc.org/resources/fastasyncworldedit.13932/");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
         if (Bukkit.getPluginManager().getPlugin("DecentHolograms") == null) {
             Logger.getLogger("cocosmines").log(Level.WARNING, "Couldn't find DecentHolograms plugin. Cocosmines has been disabled!");
-            Logger.getLogger("cocomines").log(Level.INFO, "Download DecentHolograms here: https://github.com/DecentSoftware-eu/DecentHolograms/releases");
+            Logger.getLogger("cocosmines").log(Level.INFO, "Download DecentHolograms here: https://github.com/DecentSoftware-eu/DecentHolograms/releases");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
