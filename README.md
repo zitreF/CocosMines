@@ -1,6 +1,32 @@
 # CocosMines
 Best mines plugin on GitHub
 
+# Repository
+
+```xml
+<repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+</repository>
+
+<dependency>
+    <groupId>com.github.zitreF</groupId>
+    <artifactId>CocosMines</artifactId>
+    <version>Tag</version>
+</dependency>
+```
+
+```gradle
+repositories {
+  ...
+  maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+        implementation 'com.github.zitreF:CocosMines:Tag'
+}
+```
+
 ## Dependencies:
 1. FAWE (FastAsyncWorldEdit) - https://github.com/IntellectualSites/FastAsyncWorldEdit
 2. DecentHolograms - https://github.com/DecentSoftware-eu/DecentHolograms/releases
