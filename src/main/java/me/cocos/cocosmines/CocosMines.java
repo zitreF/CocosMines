@@ -71,7 +71,7 @@ public final class CocosMines extends JavaPlugin {
         ArgumentService argumentService = new ArgumentService(this);
         this.getServer().getPluginManager().registerEvents(new PlayerChatListener(modificationService), this);
         this.getCommand("cocosmine").setExecutor(new MineCommand(argumentService));
-        MineHologramUpdateRunnable mineHologramUpdateRunnable = new MineHologramUpdateRunnable(mineService);
+        MineHologramUpdateRunnable mineHologramUpdateRunnable = new MineHologramUpdateRunnable(mineService, this.getConfig().getBoolean("actionbarNotification"));
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, mineHologramUpdateRunnable, 20, 20);
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, mineService::saveMines, TimeUnit.MINUTES.toSeconds(5)*20, TimeUnit.MINUTES.toSeconds(5)*20);
         MineRegenerationRunnable mineRegenerationRunnable = new MineRegenerationRunnable(mineService);
@@ -117,7 +117,6 @@ public final class CocosMines extends JavaPlugin {
             session.setReorderMode(EditSession.ReorderMode.FAST);
             worldToEditSession.put(world.getId(), session);
         }
-
         return worldToEditSession.get(world.getId());
     }
 }

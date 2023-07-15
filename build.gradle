@@ -1,12 +1,12 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id("xyz.jpenilla.run-paper") version "1.0.6"
-    id 'maven-publish'
 }
 
 group = 'me.cocos'
-version = '1.8-SNAPSHOT'
+version = '1.9-SNAPSHOT'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -37,7 +37,7 @@ dependencies {
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
 }
 
-def targetJavaVersion = 16
+def targetJavaVersion = 17
 java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
@@ -55,8 +55,12 @@ tasks.withType(JavaCompile).configureEach {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs << "--release" << "17"
 }
 
 processResources {
