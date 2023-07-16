@@ -58,7 +58,6 @@ public final class CocosMines extends JavaPlugin {
             return;
         }
         this.worldEditPlugin = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
-        FaweAPI.getTaskManager().repeatAsync(this::handleEditSessions, 20);
         LanguageContainer.setLanguage(language);
         MineConfiguration mineConfiguration = new MineConfiguration(this);
         try {
@@ -100,15 +99,6 @@ public final class CocosMines extends JavaPlugin {
 
     public static CocosMines getInstance() {
         return instance;
-    }
-
-    private void handleEditSessions() {
-        for (EditSession session : worldToEditSession.values()) {
-            if (session.size() > 0) {
-                session.close();
-            }
-        }
-        worldToEditSession.clear();
     }
 
     public EditSession getEditSession(World world) {

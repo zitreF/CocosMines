@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'me.cocos'
-version = '1.8-SNAPSHOT'
+version = '1.9-SNAPSHOT'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -79,7 +79,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'me.cocos'
             artifactId = 'mines'
-            version = '1.8-SNAPSHOT'
+            version = '1.9-SNAPSHOT'
 
             from components.java
         }
