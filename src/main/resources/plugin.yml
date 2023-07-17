@@ -4,7 +4,6 @@ main: me.cocos.cocosmines.CocosMines
 api-version: 1.13
 author: Cocos
 depend:
-  - DecentHolograms
   - WorldEdit
 commands:
   cocosmine:

@@ -51,7 +51,9 @@ public final class Mine {
         secondLocation.setWorld(world);
         if (spawningBlocks.isEmpty()) spawningBlocks.add(new MineBlock(50, Material.STONE));
         Location firstClone = firstLocation.clone();
-        this.hologram = DHAPI.createHologram(UUID.randomUUID().toString(), firstClone.add(secondLocation).multiply(1/2d).add(0.5, 1d, 0.5), false, List.of("Tworze hologram..."));
+        this.hologram = (CocosMines.getInstance().getHookService().useHologram()
+                ? DHAPI.createHologram(UUID.randomUUID().toString(), firstClone.add(secondLocation).multiply(1/2d).add(0.5, 1d, 0.5), false, List.of("Tworze hologram..."))
+                : null);
         this.updateLocation(firstLocation, secondLocation);
         this.updateRandomPattern();
     }
@@ -91,7 +93,8 @@ public final class Mine {
         this.secondLocation.setX(maxX);
         this.secondLocation.setY(maxY);
         this.secondLocation.setZ(maxZ);
-        this.hologram.setLocation(firstLocation.clone().add(secondLocation).multiply(0.5d));
+
+        if (CocosMines.getInstance().getHookService().useHologram()) this.hologram.setLocation(firstLocation.clone().add(secondLocation).multiply(0.5d));
 
         this.region = new CuboidRegion(BukkitAdapter.adapt(firstLocation.getWorld()), BlockVector3.at(firstLocation.getX(), firstLocation.getY(),
                 firstLocation.getZ()), BlockVector3.at(secondLocation.getX(), secondLocation.getY(), secondLocation.getZ()));

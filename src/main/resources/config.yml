@@ -1,2 +1,5 @@
 language: POLISH
-actionbarNotification: true
+
+notification:
+  useActionbar: true
+  useHologram: false

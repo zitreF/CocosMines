@@ -15,6 +15,7 @@ import me.cocos.cocosmines.listener.PlayerChatListener;
 import me.cocos.cocosmines.runnable.MineHologramUpdateRunnable;
 import me.cocos.cocosmines.runnable.MineRegenerationRunnable;
 import me.cocos.cocosmines.service.ArgumentService;
+import me.cocos.cocosmines.service.NotificationService;
 import me.cocos.cocosmines.service.MineService;
 import me.cocos.cocosmines.service.ModificationService;
 import org.bukkit.Bukkit;
@@ -34,6 +35,7 @@ public final class CocosMines extends JavaPlugin {
     private WorldEditPlugin worldEditPlugin;
     private final ConcurrentHashMap<String, EditSession> worldToEditSession = new ConcurrentHashMap<>();
     private ModificationService modificationService;
+    private NotificationService notificationService;
 
     @Override
     public void onEnable() {
@@ -51,13 +53,9 @@ public final class CocosMines extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        if (Bukkit.getPluginManager().getPlugin("DecentHolograms") == null) {
-            Logger.getLogger("cocosmines").log(Level.WARNING, "Couldn't find DecentHolograms plugin. Cocosmines has been disabled!");
-            Logger.getLogger("cocosmines").log(Level.INFO, "Download DecentHolograms here: https://github.com/DecentSoftware-eu/DecentHolograms/releases");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
+        this.notificationService = new NotificationService(this.getConfig());
         this.worldEditPlugin = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
+        FaweAPI.getTaskManager().repeatAsync(this::handleEditSessions, 20);
         LanguageContainer.setLanguage(language);
         MineConfiguration mineConfiguration = new MineConfiguration(this);
         try {
@@ -70,8 +68,10 @@ public final class CocosMines extends JavaPlugin {
         ArgumentService argumentService = new ArgumentService(this);
         this.getServer().getPluginManager().registerEvents(new PlayerChatListener(modificationService), this);
         this.getCommand("cocosmine").setExecutor(new MineCommand(argumentService));
-        MineHologramUpdateRunnable mineHologramUpdateRunnable = new MineHologramUpdateRunnable(mineService, this.getConfig().getBoolean("actionbarNotification"));
-        this.getServer().getScheduler().runTaskTimerAsynchronously(this, mineHologramUpdateRunnable, 20, 20);
+        if (notificationService.useHologram() || notificationService.useActionbar()) {
+            MineHologramUpdateRunnable mineHologramUpdateRunnable = new MineHologramUpdateRunnable(mineService, notificationService);
+            this.getServer().getScheduler().runTaskTimerAsynchronously(this, mineHologramUpdateRunnable, 20, 20);
+        }
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, mineService::saveMines, TimeUnit.MINUTES.toSeconds(5)*20, TimeUnit.MINUTES.toSeconds(5)*20);
         MineRegenerationRunnable mineRegenerationRunnable = new MineRegenerationRunnable(mineService);
         this.getServer().getScheduler().runTaskTimer(this, mineRegenerationRunnable, 0, 20);
@@ -97,8 +97,21 @@ public final class CocosMines extends JavaPlugin {
         return modificationService;
     }
 
+    public NotificationService getHookService() {
+        return notificationService;
+    }
+
     public static CocosMines getInstance() {
         return instance;
+    }
+
+    private void handleEditSessions() {
+        for (EditSession session : worldToEditSession.values()) {
+            if (session.size() > 0) {
+                session.close();
+            }
+        }
+        worldToEditSession.clear();
     }
 
     public EditSession getEditSession(World world) {

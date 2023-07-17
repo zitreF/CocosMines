@@ -76,6 +76,8 @@ public final class EnglishLanguage implements Language {
 
         this.translations.put("list-message", "&7List of mines&8:");
         this.translations.put("list-description", "list of mines");
+
+        this.translations.put("actionbar-regeneration", "&8● &7Time until regeneration&8: &f{TIME} &8●");
     }
 
     @Override

@@ -76,6 +76,8 @@ public final class PolishLanguage implements Language {
 
         this.translations.put("list-message", "&7Lista kopalni&8:");
         this.translations.put("list-description", "lista kopalni");
+
+        this.translations.put("actionbar-regeneration", "&8● &7Czas do regeneracji&8: &f{TIME} &8●");
     }
 
     @Override
