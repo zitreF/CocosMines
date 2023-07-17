@@ -21,10 +21,16 @@ import me.cocos.cocosmines.service.ModificationService;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,8 +54,8 @@ public final class CocosMines extends JavaPlugin {
             language = new EnglishLanguage();
         }
         if (Bukkit.getPluginManager().getPlugin("WorldEdit") == null) {
-            Logger.getLogger("cocosmines").log(Level.WARNING, "Couldn't find FastAsyncWorldEdit (FAWE) plugin. Cocosmines has been disabled!");
-            Logger.getLogger("cocosmines").log(Level.INFO, "Download FAWE here: https://www.spigotmc.org/resources/fastasyncworldedit.13932/");
+            this.getLogger().warning("Couldn't find FastAsyncWorldEdit (FAWE) plugin. Cocosmines has been disabled!");
+            this.getLogger().info("Download FAWE here: https://www.spigotmc.org/resources/fastasyncworldedit.13932/");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -75,6 +81,12 @@ public final class CocosMines extends JavaPlugin {
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, mineService::saveMines, TimeUnit.MINUTES.toSeconds(5)*20, TimeUnit.MINUTES.toSeconds(5)*20);
         MineRegenerationRunnable mineRegenerationRunnable = new MineRegenerationRunnable(mineService);
         this.getServer().getScheduler().runTaskTimer(this, mineRegenerationRunnable, 0, 20);
+
+        this.getVersion(version -> {
+            if (!this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                this.getLogger().info("New version of CocosMines is out: " + version + " https://www.spigotmc.org/resources/cocosmines.110860/");
+            }
+        });
     }
 
     @Override
@@ -82,6 +94,20 @@ public final class CocosMines extends JavaPlugin {
         CompletableFuture.runAsync(() -> {
             this.saveDefaultConfig();
             mineService.saveMines();
+        });
+    }
+
+    private void getVersion(Consumer<String> consumer) {
+        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+            try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 110860).openStream()) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                consumer.accept(bufferedReader.readLine());
+                inputStreamReader.close();
+                bufferedReader.close();
+            } catch (IOException exception) {
+                this.getLogger().info("Couldn't retrieve version info: " + exception.getMessage());
+            }
         });
     }
 
