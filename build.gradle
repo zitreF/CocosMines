@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'me.cocos'
-version = '2.0-SNAPSHOT'
+version = '2.1'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -26,6 +26,9 @@ repositories {
         url = "https://oss.sonatype.org/content/groups/public/"
     }
     maven { url 'https://jitpack.io' }
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
 }
 
 dependencies {
@@ -35,6 +38,7 @@ dependencies {
     implementation(platform("com.intellectualsites.bom:bom-1.16.x:1.28"))
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
+    compileOnly("me.clip:placeholderapi:2.11.3")
 }
 
 java {
@@ -63,7 +67,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'me.cocos'
             artifactId = 'mines'
-            version = '2.0-SNAPSHOT'
+            version = '2.1'
 
             from components.java
         }

@@ -9,3 +9,4 @@ commands:
   cocosmine:
     aliases:
       - cm
+      - cocosmines

@@ -27,7 +27,7 @@ public final class TimeHelper {
         }
 
         if (minutes > 0 || hours > 0) {
-            result.append(minutes).append("min ");
+            result.append(minutes).append("m ");
         }
 
         result.append(seconds).append("s");

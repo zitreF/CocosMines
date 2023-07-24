@@ -1,13 +1,11 @@
 package me.cocos.cocosmines.runnable;
 
-import eu.decentsoftware.holograms.api.DHAPI;
 import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.data.Mine;
-import me.cocos.cocosmines.data.Notification;
 import me.cocos.cocosmines.helper.TimeHelper;
 import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.MineService;
-import me.cocos.cocosmines.service.NotificationService;
+import me.cocos.cocosmines.service.HookService;
 import me.cocos.menu.helper.ChatHelper;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -22,18 +20,18 @@ import java.util.List;
 public final class MineHologramUpdateRunnable implements Runnable {
 
     private final MineService mineService;
-    private final NotificationService notificationService;
+    private final HookService hookService;
 
-    public MineHologramUpdateRunnable(MineService mineService, NotificationService notificationService) {
+    public MineHologramUpdateRunnable(MineService mineService, HookService hookService) {
         this.mineService = mineService;
-        this.notificationService = notificationService;
+        this.hookService = hookService;
     }
 
     @Override
     public void run() {
         for (Mine mine : mineService.getMines()) {
             String timeFormatted = TimeHelper.convertMillisecondsToTime(mine.getLastRegenerationTime() - System.currentTimeMillis());
-            if (notificationService.useHologram()) {
+            if (hookService.useHologram()) {
                 List<String> hologram = new ArrayList<String>(LanguageContainer.translate("hologram-lines", List.class));
                 mine.updateHologram(
                         hologram.stream()
@@ -43,7 +41,7 @@ public final class MineHologramUpdateRunnable implements Runnable {
                                 .toList()
                 );
             }
-            if (notificationService.useActionbar()) {
+            if (hookService.useActionbar()) {
                 BoundingBox boundingBox = BoundingBox.of(mine.getFirstLocation(), mine.getSecondLocation());
                 boundingBox.expand(5);
                 String translated = LanguageContainer.translate("actionbar-regeneration", String.class);
