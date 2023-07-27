@@ -3,33 +3,30 @@ package me.cocos.cocosmines.service;
 import me.cocos.cocosmines.configuration.MineConfiguration;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.data.MineBlock;
-import me.cocos.cocosmines.data.Region;
 import me.cocos.cocosmines.helper.LocationHelper;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public final class MineService {
 
-    private final RegionService regionService;
+    private final List<Mine> mines;
     private final MineConfiguration configuration;
 
     public MineService(MineConfiguration configuration) {
         this.configuration = configuration;
-        this.regionService = new RegionService();
+        this.mines = new ArrayList<>();
 
         ConfigurationSection section = configuration.getConfig().getConfigurationSection("");
         for (String key : section.getKeys(false)) {
             ConfigurationSection mineSection = section.getConfigurationSection(key);
             Mine mine = this.loadMine(mineSection);
-            regionService.addMineToRegion(mine);
+            this.mines.add(mine);
         }
     }
 
@@ -50,7 +47,7 @@ public final class MineService {
 
     public void saveMines() {
         CompletableFuture.runAsync(() -> {
-            for (Mine mine : regionService.getAllMines()) {
+            for (Mine mine : this.mines) {
                 ConfigurationSection cs = configuration.getConfig().getConfigurationSection(mine.getName());
                 cs.set("owner", mine.getOwner());
                 cs.set("creationTime", mine.getCreationTime());
@@ -71,23 +68,25 @@ public final class MineService {
     }
 
     public Mine findMineByName(String name) {
-        return regionService.findMineByName(name);
+        return mines.stream().filter(mine -> mine.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
 
     public void addMine(Mine mine) {
-        regionService.addMineToRegion(mine);
+        this.mines.add(mine);
     }
 
-    public Mine findMineByBlock(Location blockLocation) {
-        Region region = regionService.getRegionByLocation(blockLocation);
-        if (region != null) {
-            return region.getMine();
+    public Mine findMineByLocation(Location location) {
+        for (Mine mine : this.mines) {
+            if (LocationHelper.isLocationWithinRegion(mine, location)) {
+                return mine;
+            }
         }
         return null;
     }
 
     public void createMine(Mine mine) {
-        regionService.addMineToRegion(mine);
+        this.mines.add(mine);
+
         ConfigurationSection section = configuration.getConfig().createSection(mine.getName());
         section.set("owner", mine.getOwner());
         section.set("creationTime", mine.getCreationTime());
@@ -106,7 +105,7 @@ public final class MineService {
     }
 
     public void removeMine(Mine mine) {
-        regionService.removeMineFromRegion(mine);
+        this.mines.remove(mine);
         if (mine.getHologram() != null) {
             mine.getHologram().delete();
         }
@@ -121,6 +120,10 @@ public final class MineService {
     }
 
     public List<Mine> getMines() {
-        return Collections.unmodifiableList(regionService.getAllMines());
+        return Collections.unmodifiableList(this.mines);
+    }
+
+    private static long packChunkPosition(int chunkX, int chunkZ) {
+        return ((long) chunkX & 0xFFFFFFFFL) | (((long) chunkZ & 0xFFFFFFFFL) << 32);
     }
 }

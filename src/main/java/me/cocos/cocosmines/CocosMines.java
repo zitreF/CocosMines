@@ -12,7 +12,7 @@ import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.language.impl.EnglishLanguage;
 import me.cocos.cocosmines.language.impl.PolishLanguage;
 import me.cocos.cocosmines.listener.PlayerChatListener;
-import me.cocos.cocosmines.runnable.MineHologramUpdateRunnable;
+import me.cocos.cocosmines.runnable.MineInfoUpdateRunnable;
 import me.cocos.cocosmines.runnable.MineRegenerationRunnable;
 import me.cocos.cocosmines.service.ArgumentService;
 import me.cocos.cocosmines.service.HookService;
@@ -72,8 +72,8 @@ public final class CocosMines extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new PlayerChatListener(modificationService), this);
         this.getCommand("cocosmine").setExecutor(new MineCommand(argumentService));
         if (hookService.useHologram() || hookService.useActionbar()) {
-            MineHologramUpdateRunnable mineHologramUpdateRunnable = new MineHologramUpdateRunnable(mineService, hookService);
-            this.getServer().getScheduler().runTaskTimerAsynchronously(this, mineHologramUpdateRunnable, 20, 20);
+            MineInfoUpdateRunnable mineInfoUpdateRunnable = new MineInfoUpdateRunnable(mineService, hookService);
+            this.getServer().getScheduler().runTaskTimerAsynchronously(this, mineInfoUpdateRunnable, 20, 20);
         }
         this.getServer().getScheduler().runTaskTimerAsynchronously(this, mineService::saveMines, TimeUnit.MINUTES.toSeconds(5)*20, TimeUnit.MINUTES.toSeconds(5)*20);
         MineRegenerationRunnable mineRegenerationRunnable = new MineRegenerationRunnable(mineService);

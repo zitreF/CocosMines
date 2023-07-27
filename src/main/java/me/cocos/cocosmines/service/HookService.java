@@ -13,13 +13,16 @@ public final class HookService {
 
     public HookService(FileConfiguration config) {
         this.setup("DecentHolograms", () -> this.useHologram = config.getBoolean("notification.useHologram"));
-        this.setup("PlaceholderAPI", () -> new PlaceholderReplacer().register());
+        this.setup("PlaceholderAPI", () -> {
+            new PlaceholderReplacer().register();
+            System.out.println("hooked!");
+        });
         this.useActionbar = config.getBoolean("notification.useActionbar");
     }
 
     private void setup(String pluginName, Runnable hook) {
         PluginManager pluginManager = Bukkit.getServer().getPluginManager();
-        if (pluginManager.isPluginEnabled(pluginName)) {
+        if (pluginManager.getPlugin(pluginName) != null) {
             hook.run();
         }
     }

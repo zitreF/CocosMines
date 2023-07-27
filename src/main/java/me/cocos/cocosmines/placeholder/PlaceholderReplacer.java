@@ -4,10 +4,8 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.helper.TimeHelper;
-import me.cocos.cocosmines.service.MineService;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class PlaceholderReplacer extends PlaceholderExpansion {
 
@@ -22,6 +20,11 @@ public final class PlaceholderReplacer extends PlaceholderExpansion {
     }
 
     @Override
+    public boolean canRegister() {
+        return true;
+    }
+
+    @Override
     public @NotNull String getVersion() {
         return "2.1";
     }
@@ -29,7 +32,7 @@ public final class PlaceholderReplacer extends PlaceholderExpansion {
     @Override
     public String onRequest(OfflinePlayer player, @NotNull String params) {
         if (params.startsWith("time")) {
-            String[] split = params.split("-");
+            String[] split = params.split("_");
             Mine mine = CocosMines.getInstance().getMineService().findMineByName(split[1]);
             if (mine != null) {
                 return TimeHelper.convertMillisecondsToTime(mine.getLastRegenerationTime() - System.currentTimeMillis());

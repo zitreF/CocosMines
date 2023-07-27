@@ -1,5 +1,6 @@
 package me.cocos.cocosmines.helper;
 
+import me.cocos.cocosmines.data.Mine;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -24,5 +25,18 @@ public final class LocationHelper {
                 Double.parseDouble(splitted[1]),
                 Double.parseDouble(splitted[2]),
                 Double.parseDouble(splitted[3]));
+    }
+
+    public static boolean isLocationWithinRegion(Mine mine, Location location) {
+        Location firstLocation = mine.getFirstLocation();
+        Location secondLocation = mine.getSecondLocation();
+
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+
+        return (x >= firstLocation.getBlockX() && x <= secondLocation.getBlockX())
+                && (y >= firstLocation.getBlockY() && y <= secondLocation.getBlockY())
+                && (z >= firstLocation.getBlockZ() && z <= secondLocation.getBlockZ());
     }
 }

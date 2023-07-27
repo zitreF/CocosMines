@@ -2,6 +2,7 @@ package me.cocos.cocosmines.runnable;
 
 import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.data.Mine;
+import me.cocos.cocosmines.event.MineInfoUpdateEvent;
 import me.cocos.cocosmines.helper.TimeHelper;
 import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.MineService;
@@ -17,12 +18,12 @@ import org.bukkit.util.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class MineHologramUpdateRunnable implements Runnable {
+public final class MineInfoUpdateRunnable implements Runnable {
 
     private final MineService mineService;
     private final HookService hookService;
 
-    public MineHologramUpdateRunnable(MineService mineService, HookService hookService) {
+    public MineInfoUpdateRunnable(MineService mineService, HookService hookService) {
         this.mineService = mineService;
         this.hookService = hookService;
     }
@@ -30,6 +31,11 @@ public final class MineHologramUpdateRunnable implements Runnable {
     @Override
     public void run() {
         for (Mine mine : mineService.getMines()) {
+            MineInfoUpdateEvent mineInfoUpdateEvent = new MineInfoUpdateEvent(mine);
+            Bukkit.getServer().getPluginManager().callEvent(mineInfoUpdateEvent);
+            if (mineInfoUpdateEvent.isCancelled()) {
+                continue;
+            }
             String timeFormatted = TimeHelper.convertMillisecondsToTime(mine.getLastRegenerationTime() - System.currentTimeMillis());
             if (hookService.useHologram()) {
                 List<String> hologram = new ArrayList<String>(LanguageContainer.translate("hologram-lines", List.class));

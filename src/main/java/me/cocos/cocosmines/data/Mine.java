@@ -16,9 +16,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public final class Mine {
 
@@ -64,7 +62,6 @@ public final class Mine {
             randomPattern.add(BukkitAdapter.adapt(mineBlock.getMaterial().createBlockData()), mineBlock.getChance());
         }
     }
-
 
     public void regenerate() {
         EditSession editSession = CocosMines.getInstance().getEditSession(region.getWorld());
