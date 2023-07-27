@@ -35,21 +35,4 @@ public final class PlayerChatListener implements Listener {
         }
         notification.getConsumer().accept(event);
     }
-
-    @EventHandler
-    public void onMineUpdate(MineInfoUpdateEvent event) {
-        if (event.getMine().getName().equalsIgnoreCase("test1")) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void on(BlockBreakEvent event) {
-        Block block = event.getBlock();
-        Mine mine = CocosMines.getInstance().getMineService().findMineByLocation(block.getLocation());
-        if (mine == null) {
-            return;
-        }
-        event.getPlayer().sendMessage(mine.getName());
-    }
 }
