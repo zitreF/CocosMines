@@ -28,10 +28,13 @@ dependencies {
 ```
 
 ## Dependencies:
-1. FAWE (FastAsyncWorldEdit) - https://github.com/IntellectualSites/FastAsyncWorldEdit
-2. DecentHolograms - https://github.com/DecentSoftware-eu/DecentHolograms/releases
+1. **FAWE (FastAsyncWorldEdit)** - https://github.com/IntellectualSites/FastAsyncWorldEdit
+2. **DecentHolograms** - https://github.com/DecentSoftware-eu/DecentHolograms/releases (OPTIONAL!!!!!)
 
 **SpigotMC:** https://www.spigotmc.org/resources/cocosmines.110860/
+
+## Placeholders:
+1. **%cocosmines_time_minename%** - returns time of the regeneration time for specific mine.
 
 # Languages support:
 1. English
