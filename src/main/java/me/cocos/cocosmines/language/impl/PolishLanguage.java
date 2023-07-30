@@ -77,6 +77,10 @@ public final class PolishLanguage implements Language {
         this.translations.put("list-message", "&7Lista kopalni&8:");
         this.translations.put("list-description", "lista kopalni");
 
+        this.translations.put("reset-description", "resetuje kopalnie");
+        this.translations.put("reset-arguments", " <nazwa>");
+        this.translations.put("reset-success", "&a&lPomyslnie zresetowano kopalnie!");
+
         this.translations.put("actionbar-regeneration", "&8● &7Czas do regeneracji&8: &f{TIME} &8●");
     }
 

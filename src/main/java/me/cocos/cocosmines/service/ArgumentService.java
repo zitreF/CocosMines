@@ -21,7 +21,8 @@ public final class ArgumentService {
                 new PanelArgument(plugin.getMineService()),
                 new ListArgument(plugin.getMineService()),
                 new RemoveArgument(plugin.getMineService()),
-                new TeleportArgument(plugin.getMineService())
+                new TeleportArgument(plugin.getMineService()),
+                new ResetArgument(plugin.getMineService())
         ).forEach(command -> arguments.put(command.getName(), command));
     }
     public Argument getArgumentByName(String name) {

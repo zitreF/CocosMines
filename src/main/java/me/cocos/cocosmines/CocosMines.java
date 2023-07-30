@@ -36,7 +36,6 @@ public final class CocosMines extends JavaPlugin {
     private static CocosMines instance;
     private MineService mineService;
     private WorldEditPlugin worldEditPlugin;
-    private final ConcurrentHashMap<String, EditSession> worldToEditSession = new ConcurrentHashMap<>();
     private ModificationService modificationService;
     private HookService hookService;
 
@@ -58,7 +57,6 @@ public final class CocosMines extends JavaPlugin {
         }
         this.hookService = new HookService(this.getConfig());
         this.worldEditPlugin = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
-        FaweAPI.getTaskManager().repeatAsync(this::handleEditSessions, 20);
         LanguageContainer.setLanguage(language);
         MineConfiguration mineConfiguration = new MineConfiguration(this);
         try {
@@ -96,7 +94,7 @@ public final class CocosMines extends JavaPlugin {
 
     private void getVersion(Consumer<String> consumer) {
         Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-            try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + 110860).openStream()) {
+            try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=110860").openStream()) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 consumer.accept(bufferedReader.readLine());
@@ -126,23 +124,5 @@ public final class CocosMines extends JavaPlugin {
 
     public static CocosMines getInstance() {
         return instance;
-    }
-
-    private void handleEditSessions() {
-        for (EditSession session : worldToEditSession.values()) {
-            if (session.size() > 0) {
-                session.close();
-            }
-        }
-        worldToEditSession.clear();
-    }
-
-    public EditSession getEditSession(World world) {
-        if (!worldToEditSession.containsKey(world.getId())) {
-            EditSession session = WorldEdit.getInstance().newEditSessionBuilder().world(world).build();
-            session.setReorderMode(EditSession.ReorderMode.FAST);
-            worldToEditSession.put(world.getId(), session);
-        }
-        return worldToEditSession.get(world.getId());
     }
 }

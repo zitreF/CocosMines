@@ -2,6 +2,7 @@ package me.cocos.cocosmines.data;
 
 import com.fastasyncworldedit.core.FaweAPI;
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.RandomPattern;
 import com.sk89q.worldedit.math.BlockVector3;
@@ -64,8 +65,11 @@ public final class Mine {
     }
 
     public void regenerate() {
-        EditSession editSession = CocosMines.getInstance().getEditSession(region.getWorld());
-        editSession.setBlocks(region, this.randomPattern);
+        try (EditSession editSession = WorldEdit.getInstance().newEditSession(region.getWorld())) {
+            editSession.setBlocks(region, this.randomPattern);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public long getLastRegenerationTime() {

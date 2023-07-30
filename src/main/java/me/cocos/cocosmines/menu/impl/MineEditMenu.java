@@ -18,6 +18,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public final class MineEditMenu extends Menu {
 
@@ -81,6 +82,7 @@ public final class MineEditMenu extends Menu {
         this.setItem(reset, 14).onInventoryClick((event, player) -> {
             player.closeInventory();
             mine.regenerate();
+            mine.setLastRegenerationTime(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(mine.getRegenTime()));
         });
         this.setItem(teleport, 15).onInventoryClick((event, player) -> {
             player.closeInventory();
