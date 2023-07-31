@@ -65,11 +65,8 @@ public final class Mine {
     }
 
     public void regenerate() {
-        try (EditSession editSession = WorldEdit.getInstance().newEditSession(region.getWorld())) {
-            editSession.setBlocks(region, this.randomPattern);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        EditSession editSession = CocosMines.getInstance().getEditSession(region.getWorld());
+        editSession.setBlocks(region, this.randomPattern);
     }
 
     public long getLastRegenerationTime() {
