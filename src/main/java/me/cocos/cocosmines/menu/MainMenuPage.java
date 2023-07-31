@@ -24,7 +24,7 @@ public final class MainMenuPage extends Menu {
     private int page;
 
     public MainMenuPage(List<Mine> mines, int page) {
-        super("&8>> &e&lCocos&6&lMines", 6);
+        super("&8>> &e&lCocos&6&lMines", 6, true);
         this.pagination = new Pagination<>(28, mines);
         this.page = page;
         this.setOnInventoryClick((event, player) -> {
@@ -33,8 +33,7 @@ public final class MainMenuPage extends Menu {
         this.update();
     }
 
-    @Override
-    public void update() {
+    private void update() {
         this.getInventory().clear();
         GuiHelper.border(this.getInventory(), new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
         ItemBuilder next = new ItemBuilder(Material.GREEN_BANNER)

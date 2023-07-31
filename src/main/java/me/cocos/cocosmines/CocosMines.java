@@ -56,7 +56,7 @@ public final class CocosMines extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        FaweAPI.getTaskManager().repeatAsync(this::handleEditSessions, 1);
+        FaweAPI.getTaskManager().repeatAsync(this::handleEditSessions, 20);
         this.hookService = new HookService(this.getConfig());
         this.worldEditPlugin = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
         LanguageContainer.setLanguage(language);

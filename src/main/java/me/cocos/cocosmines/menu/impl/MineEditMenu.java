@@ -22,14 +22,10 @@ import java.util.concurrent.TimeUnit;
 
 public final class MineEditMenu extends Menu {
 
-    private final Mine mine;
-
     public MineEditMenu(Mine mine) {
-        super(LanguageContainer.translate("editing", String.class) + mine.getName(), 3);
-        this.mine = mine;
+        super(LanguageContainer.translate("editing", String.class) + mine.getName(), 3, true);
         ModificationService modificationService = CocosMines.getInstance().getModificationService();
         this.setOnInventoryClick(((event, player) -> event.setCancelled(true)));
-        this.setOnInventoryClose((event, player) -> this.dispose());
         GuiHelper.border(this.getInventory(), new ItemStack(Material.BLACK_STAINED_GLASS_PANE));
         ItemStack name = ItemBuilder.from(Material.NAME_TAG).withItemName(LanguageContainer.translate("edit-change-name", String.class)).build();
         ItemStack icon = ItemBuilder.from(Material.EMERALD_ORE).withItemName(LanguageContainer.translate("edit-change-icon", String.class)).build();
@@ -49,7 +45,7 @@ public final class MineEditMenu extends Menu {
         });
         this.setItem(icon, 11).onInventoryClick((event, player) -> {
             player.closeInventory();
-            Menu menu = MenuBuilder.from(MenuType.SIMPLE, LanguageContainer.translate("edit-change-icon", String.class), 1)
+            Menu menu = MenuBuilder.from(MenuType.SIMPLE, LanguageContainer.translate("edit-change-icon", String.class), 1, false)
                     .blockPlayerInventory(false)
                     .build();
             menu.setOnInventoryClose((event2, player2) -> {
@@ -95,12 +91,12 @@ public final class MineEditMenu extends Menu {
             player.closeInventory();
             modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-time-regeneration", String.class), chatEvent -> {
                 if (!NumberUtils.isDigits(chatEvent.getMessage())) {
-                    player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("must-be-number", String.class)));
+                    player.sendMessage(ChatHelper.colored(LanguageContainer.translate("must-be-number", String.class)));
                     return;
                 }
                 long regenTime = Long.parseLong(chatEvent.getMessage());
                 if (regenTime < 1) {
-                    player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("regeneration-time-error", String.class)));
+                    player.sendMessage(ChatHelper.colored(LanguageContainer.translate("regeneration-time-error", String.class)));
                     return;
                 }
                 mine.setRegenTime(regenTime);
@@ -108,11 +104,6 @@ public final class MineEditMenu extends Menu {
             }));
             new ModificationInfoRunnable(modificationService, player).runTaskTimerAsynchronously(CocosMines.getInstance(), 0, 20);
         });
-
-    }
-
-    @Override
-    public void update() {
 
     }
 }

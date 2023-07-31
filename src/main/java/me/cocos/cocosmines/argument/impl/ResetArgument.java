@@ -22,17 +22,17 @@ public final class ResetArgument implements Argument {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length != 2) {
-            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine reset" + this.getArguments()));
+            player.sendMessage(ChatHelper.colored(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine reset" + this.getArguments()));
             return;
         }
         Mine mine = mineService.findMineByName(args[1]);
         if (mine == null) {
-            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("cannot-find-mine", String.class) + args[1]));
+            player.sendMessage(ChatHelper.colored(LanguageContainer.translate("cannot-find-mine", String.class) + args[1]));
             return;
         }
         mine.regenerate();
         mine.setLastRegenerationTime(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(mine.getRegenTime()));
-        player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("reset-success", String.class)));
+        player.sendMessage(ChatHelper.colored(LanguageContainer.translate("reset-success", String.class)));
     }
 
     @Override

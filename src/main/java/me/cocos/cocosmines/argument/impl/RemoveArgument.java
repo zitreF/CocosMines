@@ -19,15 +19,15 @@ public final class RemoveArgument implements Argument {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length != 2) {
-            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine remove" + this.getArguments()));
+            player.sendMessage(ChatHelper.colored(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine remove" + this.getArguments()));
             return;
         }
         Mine mine = mineService.findMineByName(args[1]);
         if (mine == null) {
-            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("cannot-find-mine", String.class) + args[1]));
+            player.sendMessage(ChatHelper.colored(LanguageContainer.translate("cannot-find-mine", String.class) + args[1]));
             return;
         }
-        player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("remove-mine-message", String.class) + args[1]));
+        player.sendMessage(ChatHelper.colored(LanguageContainer.translate("remove-mine-message", String.class) + args[1]));
         mineService.removeMine(mine);
     }
 

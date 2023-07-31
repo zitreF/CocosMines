@@ -54,7 +54,7 @@ public final class MineInfoUpdateRunnable implements Runnable {
                 Bukkit.getScheduler().runTask(CocosMines.getInstance(), () -> {
                     for (Entity entity : mine.getWorld().getNearbyEntities(boundingBox, entity -> entity instanceof Player)) {
                         Player player = (Player) entity;
-                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatHelper.coloredText(translated).replace("{TIME}", timeFormatted)));
+                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatHelper.colored(translated).replace("{TIME}", timeFormatted)));
                     }
                 });
             }

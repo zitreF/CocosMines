@@ -31,16 +31,16 @@ public final class CreateArgument implements Argument {
     @Override
     public void execute(Player player, String[] args) {
         if (args.length != 3) {
-            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine create" + this.getArguments()));
+            player.sendMessage(ChatHelper.colored(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine create" + this.getArguments()));
             return;
         }
         if (!NumberUtils.isDigits(args[2])) {
-            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine create" + this.getArguments()));
+            player.sendMessage(ChatHelper.colored(LanguageContainer.translate("correct-usage", String.class) + "&e/cocosmine create" + this.getArguments()));
             return;
         }
         long regenTime = Long.parseLong(args[2]);
         if (regenTime < 1) {
-            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("regeneration-time-error", String.class)));
+            player.sendMessage(ChatHelper.colored(LanguageContainer.translate("regeneration-time-error", String.class)));
             return;
         }
         modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-first-location", String.class), chatEvent -> {

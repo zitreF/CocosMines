@@ -18,7 +18,7 @@ public final class PanelArgument implements Argument {
     @Override
     public void execute(Player player, String[] args) {
         if (mineService.getMines().isEmpty()) {
-            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("panel-no-mines", String.class)));
+            player.sendMessage(ChatHelper.colored(LanguageContainer.translate("panel-no-mines", String.class)));
             return;
         }
         MainMenuPage mainMenuPage = new MainMenuPage(mineService.getMines(), 0);

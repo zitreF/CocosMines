@@ -26,7 +26,7 @@ public final class ModificationInfoRunnable extends BukkitRunnable {
             return;
         }
         Notification notification = modificationService.findAction(player.getUniqueId());
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatHelper.coloredText(LanguageContainer.translate("modification-actionbar", String.class))));
-        player.sendTitle(ChatHelper.coloredText("&8● &e&lCOCOS&6&lMINES &8●"), ChatHelper.coloredText(notification.getNotification()), 0, 30, 5);
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatHelper.colored(LanguageContainer.translate("modification-actionbar", String.class))));
+        player.sendTitle(ChatHelper.colored("&8● &e&lCOCOS&6&lMINES &8●"), ChatHelper.colored(notification.getNotification()), 0, 30, 5);
     }
 }

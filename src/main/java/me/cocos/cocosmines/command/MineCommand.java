@@ -22,7 +22,7 @@ public final class MineCommand implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         Player player = (Player) sender;
         if (!player.hasPermission("cocosmines.admin")) {
-            player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("no-permission", String.class)));
+            player.sendMessage(ChatHelper.colored(LanguageContainer.translate("no-permission", String.class)));
             return false;
         }
         if (args.length == 0) {
@@ -39,12 +39,12 @@ public final class MineCommand implements CommandExecutor {
     }
 
     private void sendCorrectUsageMessage(Player player) {
-        player.sendMessage(ChatHelper.coloredText("&8&m|>>----)&e&l Cocos&6&lMines &8&m(----<<"));
-        player.sendMessage(ChatHelper.coloredText("&8&m|"));
+        player.sendMessage(ChatHelper.colored("&8&m|>>----)&e&l Cocos&6&lMines &8&m(----<<"));
+        player.sendMessage(ChatHelper.colored("&8&m|"));
         for (Argument argument : argumentService.getArguments()) {
-            player.sendMessage(ChatHelper.coloredText("&8&m|&e /cocosmine " + argument.getName() + argument.getArguments() + " &8- &7" + argument.getDescription()));
+            player.sendMessage(ChatHelper.colored("&8&m|&e /cocosmine " + argument.getName() + argument.getArguments() + " &8- &7" + argument.getDescription()));
         }
-        player.sendMessage(ChatHelper.coloredText("&8&m|"));
-        player.sendMessage(ChatHelper.coloredText("&8&m|>>----)&e&l Cocos&6&lMines &8&m(----<<"));
+        player.sendMessage(ChatHelper.colored("&8&m|"));
+        player.sendMessage(ChatHelper.colored("&8&m|>>----)&e&l Cocos&6&lMines &8&m(----<<"));
     }
 }

@@ -33,7 +33,7 @@ repositories {
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
-    implementation 'com.github.zitreF:CocosMenu:2.5.2'
+    implementation 'com.github.zitreF:CocosMenu:2.6'
     compileOnly 'com.github.decentsoftware-eu:decentholograms:2.8.3'
     implementation(platform("com.intellectualsites.bom:bom-1.16.x:1.28"))
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")

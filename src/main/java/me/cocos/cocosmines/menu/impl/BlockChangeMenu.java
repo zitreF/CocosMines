@@ -33,7 +33,7 @@ public final class BlockChangeMenu extends Menu {
     private final ModificationService modificationService;
 
     public BlockChangeMenu(Mine mine) {
-        super(LanguageContainer.translate("edit-change-blocks", String.class), 3);
+        super(LanguageContainer.translate("edit-change-blocks", String.class), 3, true);
         this.mine = mine;
         this.modificationService = CocosMines.getInstance().getModificationService();
         this.setBlockPlayerInventory(false);
@@ -62,12 +62,9 @@ public final class BlockChangeMenu extends Menu {
                 this.onBlockClick(e, firstEmpty, mineBlock, p);
             });
         });
-        this.setOnInventoryClose((event, player) -> {
-            this.dispose();
-        });
     }
-    @Override
-    public void update() {
+
+    private void update() {
         this.clearInventory();
         for (MineBlock mineBlock : mine.getSpawningBlocks()) {
             int firstEmpty = this.getInventory().firstEmpty();
@@ -94,12 +91,12 @@ public final class BlockChangeMenu extends Menu {
             player.closeInventory();
             modificationService.addAction(player.getUniqueId(), new Notification(LanguageContainer.translate("modification-percentage-set", String.class), chatEvent -> {
                 if (!NumberUtils.isDigits(chatEvent.getMessage())) {
-                    player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("must-be-number", String.class)));
+                    player.sendMessage(ChatHelper.colored(LanguageContainer.translate("must-be-number", String.class)));
                     return;
                 }
                 double percent = Double.parseDouble(chatEvent.getMessage());
                 if (percent > 100 || percent < 0) {
-                    player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("percent-error", String.class)));
+                    player.sendMessage(ChatHelper.colored(LanguageContainer.translate("percent-error", String.class)));
                     return;
                 }
                 mine.updateMineBlockChance(mineBlock, percent);

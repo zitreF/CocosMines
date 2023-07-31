@@ -18,9 +18,9 @@ public final class ListArgument implements Argument {
     @Override
     public void execute(Player player, String[] args) {
         player.sendMessage("");
-        player.sendMessage(ChatHelper.coloredText(LanguageContainer.translate("list-message", String.class)));
+        player.sendMessage(ChatHelper.colored(LanguageContainer.translate("list-message", String.class)));
         for (Mine mine : mineService.getMines()) {
-            player.sendMessage(ChatHelper.coloredText("&8- &f" + mine.getName() + " &8- &7" + mine.getOwner()));
+            player.sendMessage(ChatHelper.colored("&8- &f" + mine.getName() + " &8- &7" + mine.getOwner()));
         }
         player.sendMessage("");
     }
