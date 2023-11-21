@@ -7,7 +7,7 @@ import me.cocos.cocosmines.helper.TimeHelper;
 import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.MineService;
 import me.cocos.cocosmines.service.HookService;
-import me.cocos.menu.helper.ChatHelper;
+import me.cocos.gui.helper.ChatHelper;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;

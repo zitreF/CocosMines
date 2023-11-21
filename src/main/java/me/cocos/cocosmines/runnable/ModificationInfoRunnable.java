@@ -3,7 +3,7 @@ package me.cocos.cocosmines.runnable;
 import me.cocos.cocosmines.data.Notification;
 import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.ModificationService;
-import me.cocos.menu.helper.ChatHelper;
+import me.cocos.gui.helper.ChatHelper;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;

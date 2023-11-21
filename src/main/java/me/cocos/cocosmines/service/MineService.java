@@ -86,7 +86,6 @@ public final class MineService {
 
     public void createMine(Mine mine) {
         this.mines.add(mine);
-
         ConfigurationSection section = configuration.getConfig().createSection(mine.getName());
         section.set("owner", mine.getOwner());
         section.set("creationTime", mine.getCreationTime());

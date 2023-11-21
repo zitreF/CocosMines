@@ -4,7 +4,7 @@ import me.cocos.cocosmines.argument.Argument;
 import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.menu.MainMenuPage;
 import me.cocos.cocosmines.service.MineService;
-import me.cocos.menu.helper.ChatHelper;
+import me.cocos.gui.helper.ChatHelper;
 import org.bukkit.entity.Player;
 
 public final class PanelArgument implements Argument {
@@ -22,7 +22,7 @@ public final class PanelArgument implements Argument {
             return;
         }
         MainMenuPage mainMenuPage = new MainMenuPage(mineService.getMines(), 0);
-        player.openInventory(mainMenuPage.getInventory());
+        mainMenuPage.open(player);
     }
 
     @Override

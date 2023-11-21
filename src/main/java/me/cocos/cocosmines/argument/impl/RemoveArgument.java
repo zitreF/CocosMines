@@ -1,11 +1,10 @@
 package me.cocos.cocosmines.argument.impl;
 
-import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.argument.Argument;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.MineService;
-import me.cocos.menu.helper.ChatHelper;
+import me.cocos.gui.helper.ChatHelper;
 import org.bukkit.entity.Player;
 
 public final class RemoveArgument implements Argument {

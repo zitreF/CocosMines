@@ -18,6 +18,7 @@ import me.cocos.cocosmines.service.ArgumentService;
 import me.cocos.cocosmines.service.HookService;
 import me.cocos.cocosmines.service.MineService;
 import me.cocos.cocosmines.service.ModificationService;
+import me.cocos.gui.CocosGui;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -42,6 +43,7 @@ public final class CocosMines extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        CocosGui.initialize();
         this.saveDefaultConfig();
         instance = this;
         Language language;

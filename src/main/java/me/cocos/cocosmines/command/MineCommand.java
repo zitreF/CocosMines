@@ -3,7 +3,7 @@ package me.cocos.cocosmines.command;
 import me.cocos.cocosmines.argument.Argument;
 import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.ArgumentService;
-import me.cocos.menu.helper.ChatHelper;
+import me.cocos.gui.helper.ChatHelper;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

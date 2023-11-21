@@ -4,7 +4,7 @@ import me.cocos.cocosmines.argument.Argument;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.service.MineService;
-import me.cocos.menu.helper.ChatHelper;
+import me.cocos.gui.helper.ChatHelper;
 import org.apache.commons.lang.CharUtils;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

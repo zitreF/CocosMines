@@ -8,37 +8,38 @@ import me.cocos.cocosmines.helper.MaterialHelper;
 import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.runnable.ModificationInfoRunnable;
 import me.cocos.cocosmines.service.ModificationService;
-import me.cocos.menu.Menu;
-import me.cocos.menu.builder.impl.ItemBuilder;
-import me.cocos.menu.helper.ChatHelper;
-import me.cocos.menu.holder.MenuHolder;
+import me.cocos.gui.builder.gui.GuiBuilder;
+import me.cocos.gui.builder.item.impl.ItemBuilder;
+import me.cocos.gui.data.GuiItem;
+import me.cocos.gui.gui.Gui;
+import me.cocos.gui.gui.holder.GuiHolder;
+import me.cocos.gui.helper.ChatHelper;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.BiConsumer;
 
-public final class BlockChangeMenu extends Menu {
+public final class BlockChangeMenu {
 
+    private final Gui gui;
     private final Mine mine;
     private final ModificationService modificationService;
 
     public BlockChangeMenu(Mine mine) {
-        super(LanguageContainer.translate("edit-change-blocks", String.class), 3, true);
+        this.gui = GuiBuilder.normal(LanguageContainer.translate("edit-change-blocks", String.class), 3)
+                .disposable(true)
+                .blockPlayerInventory(false)
+                .build();
         this.mine = mine;
         this.modificationService = CocosMines.getInstance().getModificationService();
-        this.setBlockPlayerInventory(false);
         this.update();
-        this.setOnInventoryClick((event, player) -> {
+        this.gui.setOnClick((event, player) -> {
             event.setCancelled(true);
             if (!(event.getClickedInventory() instanceof PlayerInventory)) {
                 return;
@@ -49,43 +50,47 @@ public final class BlockChangeMenu extends Menu {
             }
             MineBlock mineBlock = new MineBlock(50, clickedBlock.getType());
             mine.addSpawningBlock(mineBlock);
-            int firstEmpty = this.getInventory().firstEmpty();
+            int firstEmpty = this.gui.getInventory().firstEmpty();
             if (firstEmpty == -1) return;
             List<String> blockInfoLore = new ArrayList<String>(LanguageContainer.translate("block-action-lore", List.class));
-            ItemBuilder builder = ItemBuilder.from(mineBlock.getMaterial())
-                    .withLore(
+            GuiItem guiItem = ItemBuilder.from(mineBlock.getMaterial())
+                    .lore(
                             blockInfoLore.stream()
                                     .map(string -> string.replace("{CHANCE}", String.valueOf(mineBlock.getChance())))
                                     .toList()
-                    );
-            this.setItem(builder.build(), firstEmpty).onInventoryClick((e, p) -> {
-                this.onBlockClick(e, firstEmpty, mineBlock, p);
-            });
+                    )
+                    .asGuiItem()
+                    .onClick((e, p) -> {
+                        this.onBlockClick(e, firstEmpty, mineBlock, p);
+                    });
+            this.gui.setItem(firstEmpty, guiItem);
         });
     }
 
     private void update() {
-        this.clearInventory();
+        this.gui.getInventory().clear();
         for (MineBlock mineBlock : mine.getSpawningBlocks()) {
-            int firstEmpty = this.getInventory().firstEmpty();
+            int firstEmpty = this.gui.getInventory().firstEmpty();
             if (firstEmpty == -1) return;
             List<String> blockInfoLore = new ArrayList<String>(LanguageContainer.translate("block-action-lore", List.class));
-            ItemBuilder builder = ItemBuilder.from(mineBlock.getMaterial())
-                    .withLore(
+            GuiItem guiItem = ItemBuilder.from(mineBlock.getMaterial())
+                    .lore(
                             blockInfoLore.stream()
                                     .map(string -> string.replace("{CHANCE}", String.valueOf(mineBlock.getChance())))
                                     .toList()
-                    );
-            this.setItem(builder.build(), firstEmpty).onInventoryClick((event, player) -> {
-                this.onBlockClick(event, firstEmpty, mineBlock, player);
-            });
+                    )
+                    .asGuiItem()
+                    .onClick((event, player) -> {
+                        this.onBlockClick(event, firstEmpty, mineBlock, player);
+                    });
+            this.gui.setItem(firstEmpty, guiItem);
         }
     }
 
     private void onBlockClick(InventoryClickEvent event, int firstEmpty, MineBlock mineBlock, Player player) {
-        if (event.getClickedInventory() == null || !(event.getClickedInventory().getHolder() instanceof MenuHolder)) return;
+        if (event.getClickedInventory() == null || !(event.getClickedInventory().getHolder() instanceof GuiHolder)) return;
         if (event.isLeftClick()) {
-            this.setItem((ItemStack) null, firstEmpty);
+            this.gui.setItem(firstEmpty, GuiItem.of(Material.AIR));
             mine.removeSpawningBlock(mineBlock);
         } else if (event.isRightClick()) {
             player.closeInventory();
@@ -102,9 +107,13 @@ public final class BlockChangeMenu extends Menu {
                 mine.updateMineBlockChance(mineBlock, percent);
                 modificationService.removeAction(player.getUniqueId());
                 BlockChangeMenu blockChangeMenu = new BlockChangeMenu(mine);
-                Bukkit.getScheduler().runTask(CocosMines.getInstance(), () -> player.openInventory(blockChangeMenu.getInventory()));
+                Bukkit.getScheduler().runTask(CocosMines.getInstance(), () -> blockChangeMenu.open(player));
             }));
             new ModificationInfoRunnable(modificationService, player).runTaskTimerAsynchronously(CocosMines.getInstance(), 0, 20);
         }
+    }
+
+    public void open(Player player) {
+        this.gui.open(player);
     }
 }

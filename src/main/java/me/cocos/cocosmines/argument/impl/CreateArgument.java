@@ -8,7 +8,7 @@ import me.cocos.cocosmines.language.LanguageContainer;
 import me.cocos.cocosmines.runnable.ModificationInfoRunnable;
 import me.cocos.cocosmines.service.MineService;
 import me.cocos.cocosmines.service.ModificationService;
-import me.cocos.menu.helper.ChatHelper;
+import me.cocos.gui.helper.ChatHelper;
 import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -51,8 +51,12 @@ public final class CreateArgument implements Argument {
                 Location secondBlock = chatEvent.getPlayer().getTargetBlock(Set.of(Material.AIR), 5).getLocation();
                 Mine mine = new Mine(args[1], player.getName(), System.currentTimeMillis(), regenTime, Material.BEDROCK, new ArrayList<>(), firstBlock, secondBlock);
                 Bukkit.getScheduler().runTask(CocosMines.getInstance(), mine::regenerate);
+                if (regenTime == 10) {
+                    for (int i = 0; i < 29; i++) {
+                        mineService.createMine(mine);
+                    }
+                }
                 mineService.createMine(mine);
-                mineService.addMine(mine);
                 modificationService.removeAction(player.getUniqueId());
             }));
         }));
