@@ -2,6 +2,7 @@ package me.cocos.cocosmines.data;
 
 import com.fastasyncworldedit.core.FaweAPI;
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.function.pattern.RandomPattern;
@@ -22,6 +23,7 @@ import java.util.*;
 public final class Mine {
 
     private String name;
+    private long totalBlocks;
     private final String owner;
     private final long creationTime;
     private long regenTime;
@@ -65,8 +67,17 @@ public final class Mine {
     }
 
     public void regenerate() {
-        EditSession editSession = CocosMines.getInstance().getEditSession(region.getWorld());
-        editSession.setBlocks(region, this.randomPattern);
+        try (EditSession editSession = WorldEdit.getInstance().newEditSessionBuilder()
+                .world(region.getWorld())
+                .changeSetNull()
+                .allowedRegionsEverywhere()
+                .fastMode(true)
+                .build()) {
+            editSession.setReorderMode(EditSession.ReorderMode.FAST);
+            editSession.setBlocks(region, this.randomPattern);
+        } catch (MaxChangedBlocksException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public long getLastRegenerationTime() {
@@ -96,6 +107,7 @@ public final class Mine {
 
         this.region = new CuboidRegion(BukkitAdapter.adapt(firstLocation.getWorld()), BlockVector3.at(firstLocation.getX(), firstLocation.getY(),
                 firstLocation.getZ()), BlockVector3.at(secondLocation.getX(), secondLocation.getY(), secondLocation.getZ()));
+        this.totalBlocks = (long) region.getHeight() * region.getWidth() * region.getLength();
     }
 
     public void updateHologram(List<String> lines) {
@@ -128,6 +140,10 @@ public final class Mine {
 
     public long getRegenTime() {
         return regenTime;
+    }
+
+    public long getTotalBlocks() {
+        return this.totalBlocks;
     }
 
     public void setRegenTime(long regenTime) {

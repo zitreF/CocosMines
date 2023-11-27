@@ -13,6 +13,7 @@ import me.cocos.cocosmines.language.impl.EnglishLanguage;
 import me.cocos.cocosmines.language.impl.PolishLanguage;
 import me.cocos.cocosmines.listener.PlayerChatListener;
 import me.cocos.cocosmines.runnable.MineInfoUpdateRunnable;
+import me.cocos.cocosmines.runnable.MineQueueRunnable;
 import me.cocos.cocosmines.runnable.MineRegenerationRunnable;
 import me.cocos.cocosmines.service.ArgumentService;
 import me.cocos.cocosmines.service.HookService;
@@ -40,6 +41,7 @@ public final class CocosMines extends JavaPlugin {
     private ModificationService modificationService;
     private final ConcurrentHashMap<String, EditSession> worldToEditSession = new ConcurrentHashMap<>();
     private HookService hookService;
+    private MineQueueRunnable mineQueueRunnable;
 
     @Override
     public void onEnable() {
@@ -58,7 +60,8 @@ public final class CocosMines extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        FaweAPI.getTaskManager().repeatAsync(this::handleEditSessions, 20);
+        this.mineQueueRunnable = new MineQueueRunnable();
+        FaweAPI.getTaskManager().repeatAsync(mineQueueRunnable, 1);
         this.hookService = new HookService(this.getConfig());
         this.worldEditPlugin = (WorldEditPlugin) Bukkit.getPluginManager().getPlugin("WorldEdit");
         LanguageContainer.setLanguage(language);
@@ -110,31 +113,16 @@ public final class CocosMines extends JavaPlugin {
         });
     }
 
-    private void handleEditSessions() {
-        for (EditSession session : worldToEditSession.values()) {
-            if (session.size() > 0) {
-                session.close();
-            }
-        }
-        worldToEditSession.clear();
-    }
-
-    public EditSession getEditSession(World world) {
-        if (!worldToEditSession.containsKey(world.getId())) {
-            EditSession session = WorldEdit.getInstance().newEditSessionBuilder().world(world).build();
-            session.setReorderMode(EditSession.ReorderMode.FAST);
-            worldToEditSession.put(world.getId(), session);
-        }
-
-        return worldToEditSession.get(world.getId());
-    }
-
     public MineService getMineService() {
         return mineService;
     }
 
     public WorldEditPlugin getWorldEditPlugin() {
         return worldEditPlugin;
+    }
+
+    public MineQueueRunnable getMineQueueRunnable() {
+        return this.mineQueueRunnable;
     }
 
     public ModificationService getModificationService() {
