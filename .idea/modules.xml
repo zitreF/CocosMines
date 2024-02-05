@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/CocosMines.main.iml" filepath="$PROJECT_DIR$/.idea/modules/CocosMines.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/CocosMines.test.iml" filepath="$PROJECT_DIR$/.idea/modules/CocosMines.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Intellij Projects.CocosMines.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Intellij Projects.CocosMines.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/me.cocos.CocosMines.main.iml" filepath="$PROJECT_DIR$/.idea/modules/me.cocos.CocosMines.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/me.cocos.CocosMines.test.iml" filepath="$PROJECT_DIR$/.idea/modules/me.cocos.CocosMines.test.iml" />
     </modules>

@@ -39,7 +39,6 @@ public final class CocosMines extends JavaPlugin {
     private MineService mineService;
     private WorldEditPlugin worldEditPlugin;
     private ModificationService modificationService;
-    private final ConcurrentHashMap<String, EditSession> worldToEditSession = new ConcurrentHashMap<>();
     private HookService hookService;
     private MineQueueRunnable mineQueueRunnable;
 
