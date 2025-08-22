@@ -1,10 +1,7 @@
 package me.cocos.cocosmines;
 
 import com.fastasyncworldedit.core.FaweAPI;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.world.World;
 import me.cocos.cocosmines.command.MineCommand;
 import me.cocos.cocosmines.configuration.MineConfiguration;
 import me.cocos.cocosmines.language.Language;
@@ -29,7 +26,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 

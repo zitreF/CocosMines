@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'me.cocos'
-version = '2.5'
+version = '2.7'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -31,7 +31,7 @@ repositories {
         url 'https://jitpack.io'
     }
     maven {
-        url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+        url "https://maven.enginehub.org/repo/"
     }
 }
 
@@ -39,10 +39,12 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
     implementation 'com.github.zitreF:CocosGui:1.5'
     compileOnly 'com.github.decentsoftware-eu:decentholograms:2.8.3'
-    implementation(platform("com.intellectualsites.bom:bom-1.16.x:1.28"))
+    implementation(platform("com.intellectualsites.bom:bom-newest:1.40")) // Ref: https://github.com/IntellectualSites/bom
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit")
-    compileOnly("me.clip:placeholderapi:2.11.3")
+// https://mvnrepository.com/artifact/com.github.placeholderapi/placeholderapi
+    compileOnly("com.github.placeholderapi:placeholderapi:2.10.9")
+
 }
 
 java {
@@ -52,11 +54,11 @@ java {
 }
 
 processResources {
-    def props = [version: version]
+    def props = [version: project.version]
     inputs.properties props
-    filteringCharset 'UTF-8'
+    filteringCharset = 'UTF-8'
     filesMatching('plugin.yml') {
-        expand props
+        expand(props)
     }
 }
 
@@ -71,7 +73,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'me.cocos'
             artifactId = 'mines'
-            version = '2.5'
+            version = '2.7'
 
             from components.java
         }

@@ -1,6 +1,5 @@
 package me.cocos.cocosmines.service;
 
-import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.placeholder.PlaceholderReplacer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;

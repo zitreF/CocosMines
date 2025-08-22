@@ -1,11 +1,11 @@
 package me.cocos.cocosmines.placeholder;
 
-import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.cocos.cocosmines.CocosMines;
 import me.cocos.cocosmines.data.Mine;
 import me.cocos.cocosmines.helper.TimeHelper;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public final class PlaceholderReplacer extends PlaceholderExpansion {
 
@@ -26,7 +26,7 @@ public final class PlaceholderReplacer extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return "2.3";
+        return "2.7";
     }
 
     @Override
